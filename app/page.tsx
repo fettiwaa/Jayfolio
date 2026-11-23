@@ -10,7 +10,7 @@ import { ExperienceEmpty } from "@/components/ui/experience-empty";
 import { Button } from "@/components/ui/button";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
 import { experiences, educationData, projects } from "@/lib/data";
-import { site } from "@/lib/constants";
+import { emailComposeUrl, site } from "@/lib/constants";
 
 const experienceItems = experiences.map((exp) => ({
   period: exp.period,
@@ -39,7 +39,7 @@ const channels = [
   {
     label: "Email",
     value: site.email,
-    href: `mailto:${site.email}`,
+    href: emailComposeUrl,
     icon: Mail,
   },
   {
@@ -59,8 +59,8 @@ const channels = [
 const panelLinkClasses =
   "inline-flex items-center gap-1 normal-case tracking-normal font-sans text-xs text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)";
 
-// Section ids (about, projects, experience, skills, education, contact) match the
-// nav links so the nav can highlight the panel in view.
+// Section ids (about, projects, experience, skills, education, contact) give each
+// panel a linkable anchor, e.g. /#projects.
 export default function Home() {
   return (
     <div className="max-width-content mx-auto section-padding-x pt-6 pb-16 md:pt-8 md:pb-20">

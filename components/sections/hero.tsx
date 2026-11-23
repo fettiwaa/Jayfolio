@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, type CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
-import { site } from "@/lib/constants";
+import { emailComposeUrl, site } from "@/lib/constants";
 import { projects, skillCategories } from "@/lib/data";
 import { panelItem, EASE_OUT } from "@/lib/animations";
 import { Button } from "@/components/ui/button";
@@ -109,7 +109,7 @@ export default function HeroPanels() {
                 View Projects
               </Button>
               <Button
-                href={`mailto:${site.email}`}
+                href={emailComposeUrl}
                 variant="secondary"
                 icon={<Mail size={16} />}
               >

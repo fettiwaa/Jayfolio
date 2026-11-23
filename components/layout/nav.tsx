@@ -11,51 +11,11 @@ import { useDialog } from "@/lib/use-dialog";
 
 const MOBILE_MENU_ID = "mobile-menu";
 
-/**
- * On the home page, returns the id of the section currently in the middle band
- * of the viewport, or null above the first section (the hero).
- */
-function useActiveSection(enabled: boolean): string | null {
-  const [active, setActive] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!enabled) return;
-
-    const sections = navLinks
-      .map((link) => document.getElementById(link.href.slice(1)))
-      .filter((el): el is HTMLElement => el !== null);
-
-    const visible = new Set<string>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) visible.add(entry.target.id);
-          else visible.delete(entry.target.id);
-        }
-        // The first section in page order that crosses the band wins.
-        const current = sections.find((section) => visible.has(section.id));
-        setActive(current ? current.id : null);
-      },
-      // A band 40%–45% down the viewport: a section is "current" while it covers that band.
-      { rootMargin: "-40% 0px -55% 0px" },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => {
-      observer.disconnect();
-      setActive(null);
-    };
-  }, [enabled]);
-
-  return enabled ? active : null;
-}
-
 export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const activeSection = useActiveSection(isHome);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useDialog({
@@ -71,10 +31,10 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Nav links are separate pages, so only the page you're on is marked active
+  // (nothing on Home; /projects stays active on a case study).
   const isLinkActive = (href: string) =>
-    isHome
-      ? activeSection === href.slice(1)
-      : pathname === href || pathname.startsWith(`${href}/`);
+    pathname === href || pathname.startsWith(`${href}/`);
 
   const isSolid = scrolled || !isHome;
 
@@ -125,9 +85,7 @@ export default function Nav() {
                 <li key={link.href} className="relative">
                   <Link
                     href={link.href}
-                    aria-current={
-                      isActive ? (isHome ? "location" : "page") : undefined
-                    }
+                    aria-current={isActive ? "page" : undefined}
                     className={`text-label transition-colors ${
                       isActive
                         ? "text-(--theme-text)"
@@ -210,9 +168,7 @@ export default function Nav() {
                       <Link
                         href={link.href}
                         onClick={() => setIsOpen(false)}
-                        aria-current={
-                          isActive ? (isHome ? "location" : "page") : undefined
-                        }
+                        aria-current={isActive ? "page" : undefined}
                         className={`text-2xl underline-offset-8 ${
                           isActive
                             ? "text-(--theme-text) underline decoration-1"

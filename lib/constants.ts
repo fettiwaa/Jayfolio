@@ -9,6 +9,12 @@ export const site = {
   resume: "/resume.pdf",
 };
 
+/**
+ * "Email me" opens Gmail's compose window in a new tab. A plain mailto: link
+ * does nothing on computers without a default mail app, so clicks felt dead.
+ */
+export const emailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(site.email)}`;
+
 export const navLinks = [
   { href: "/about", label: "About" },
   { href: "/projects", label: "Projects" },

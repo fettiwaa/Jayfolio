@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
-import { site } from "@/lib/constants";
+import { emailComposeUrl, site } from "@/lib/constants";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
 
 interface SocialLink {
@@ -14,7 +14,7 @@ interface SocialLink {
 const socialLinks: SocialLink[] = [
   { href: site.github, label: "GitHub", icon: GitHubIcon },
   { href: site.linkedin, label: "LinkedIn", icon: LinkedInIcon },
-  { href: `mailto:${site.email}`, label: "Email", icon: Mail },
+  { href: emailComposeUrl, label: "Email", icon: Mail },
 ];
 
 /** Status-bar footer: current path, credits, social links. */

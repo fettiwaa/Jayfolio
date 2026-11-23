@@ -3,13 +3,13 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Panel, PanelGrid } from "@/components/ui/panel";
 import { Button } from "@/components/ui/button";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
-import { site } from "@/lib/constants";
+import { emailComposeUrl, site } from "@/lib/constants";
 
 const channels = [
   {
     label: "Email",
     value: site.email,
-    href: `mailto:${site.email}`,
+    href: emailComposeUrl,
     icon: Mail,
   },
   {
@@ -93,7 +93,7 @@ export default function ContactPage() {
           </p>
           <div className="mt-5">
             <Button
-              href={`mailto:${site.email}`}
+              href={emailComposeUrl}
               variant="primary"
               className="w-full"
               icon={<Mail size={16} />}
