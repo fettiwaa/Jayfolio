@@ -1,16 +1,15 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import path from 'path';
-import fs from 'fs';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import { serialize } from 'next-mdx-remote/serialize';
-import rehypeHighlight from 'rehype-highlight';
-import remarkGfm from 'remark-gfm';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { AnimatedPill } from '@/components/ui/animated-pill';
-import { projects } from '@/lib/data';
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import path from "path";
+import fs from "fs";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { AnimatedPill } from "@/components/ui/animated-pill";
+import { projects } from "@/lib/data";
 
-const projectsDir = path.join(process.cwd(), 'content', 'projects');
+const projectsDir = path.join(process.cwd(), "content", "projects");
 
 function getProjectBySlug(slug: string) {
   return projects.find((p) => p.slug === slug);
@@ -30,17 +29,25 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
-  if (!project) return { title: 'Project Not Found' };
+  if (!project) return { title: "Project Not Found" };
   return {
     title: project.title,
     description: project.description,
   };
 }
 
-export default async function ProjectCaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProjectCaseStudyPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
 
@@ -49,14 +56,16 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
   }
 
   const filePath = path.join(projectsDir, `${slug}.mdx`);
-  const source = fs.readFileSync(filePath, 'utf-8');
-  const mdxSource = await serialize(source, {
+  const source = fs.readFileSync(filePath, "utf-8");
+  // The RSC MDXRemote compiles the raw MDX string itself; passing a
+  // serialize() result here renders an empty body.
+  const mdxOptions = {
+    parseFrontmatter: true,
     mdxOptions: {
       remarkPlugins: [remarkGfm],
       rehypePlugins: [rehypeHighlight],
     },
-    parseFrontmatter: true,
-  });
+  };
 
   const { prev, next } = getAdjacentProjects(slug);
 
@@ -66,7 +75,7 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
         <Link
           href="/projects"
           className="inline-flex items-center gap-1 text-sm mb-8 transition-colors"
-          style={{ color: 'var(--theme-text-secondary)' }}
+          style={{ color: "var(--theme-text-secondary)" }}
         >
           <ArrowLeft size={16} />
           Back to Projects
@@ -75,13 +84,13 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
         <header className="mb-12">
           <h1
             className="text-4xl md:text-5xl font-bold tracking-tight mb-4"
-            style={{ color: 'var(--theme-text)' }}
+            style={{ color: "var(--theme-text)" }}
           >
             {project.title}
           </h1>
           <p
             className="text-lg md:text-xl max-w-2xl"
-            style={{ color: 'var(--theme-text-secondary)' }}
+            style={{ color: "var(--theme-text-secondary)" }}
           >
             {project.description}
           </p>
@@ -96,11 +105,15 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
 
           <div
             className="flex flex-wrap gap-4 text-sm"
-            style={{ color: 'var(--theme-text-muted)' }}
+            style={{ color: "var(--theme-text-muted)" }}
           >
             <span className="font-mono">
-              {project.year} ·{' '}
-              <span style={{ color: project.status === 'Completed' ? '#4ade80' : '#fbbf24' }}>
+              {project.year} ·{" "}
+              <span
+                style={{
+                  color: project.status === "Completed" ? "#4ade80" : "#fbbf24",
+                }}
+              >
                 {project.status}
               </span>
             </span>
@@ -110,19 +123,22 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
 
         <div
           className="prose prose-gray max-w-none"
-          style={{ color: 'var(--theme-text-secondary)' }}
+          style={{ color: "var(--theme-text-secondary)" }}
         >
-          <MDXRemote source={mdxSource} />
+          <MDXRemote source={source} options={mdxOptions} />
         </div>
 
-        <footer className="mt-16 pt-8 border-t flex flex-wrap gap-6" style={{ borderColor: 'var(--theme-border)' }}>
+        <footer
+          className="mt-16 pt-8 border-t flex flex-wrap gap-6"
+          style={{ borderColor: "var(--theme-border)" }}
+        >
           {project.github && (
             <a
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: 'var(--theme-text-secondary)' }}
+              style={{ color: "var(--theme-text-secondary)" }}
             >
               GitHub Repository
             </a>
@@ -133,7 +149,7 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: 'var(--theme-text-secondary)' }}
+              style={{ color: "var(--theme-text-secondary)" }}
             >
               Live Demo
             </a>
@@ -142,13 +158,13 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
 
         <div
           className="mt-12 pt-8 border-t flex justify-between items-center"
-          style={{ borderColor: 'var(--theme-border)' }}
+          style={{ borderColor: "var(--theme-border)" }}
         >
           {prev && (
             <Link
               href={`/projects/${prev.slug}`}
               className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: 'var(--theme-text-secondary)' }}
+              style={{ color: "var(--theme-text-secondary)" }}
             >
               <ArrowLeft size={16} />
               Previous: {prev.title}
@@ -157,7 +173,7 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
           <Link
             href="/projects"
             className="text-sm transition-colors"
-            style={{ color: 'var(--theme-text-secondary)' }}
+            style={{ color: "var(--theme-text-secondary)" }}
           >
             All Projects
           </Link>
@@ -165,7 +181,7 @@ export default async function ProjectCaseStudyPage({ params }: { params: Promise
             <Link
               href={`/projects/${next.slug}`}
               className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: 'var(--theme-text-secondary)' }}
+              style={{ color: "var(--theme-text-secondary)" }}
             >
               Next: {next.title}
               <ArrowRight size={16} />
