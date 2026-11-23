@@ -9,7 +9,7 @@ import { hoverLift, panelItem } from "@/lib/animations";
 import type { Project } from "@/lib/types";
 
 const actionClasses =
-  "inline-flex items-center gap-1 text-xs font-mono px-2.5 py-1.5 rounded-(--btn-radius) border border-(--theme-border) text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:border-(--theme-border-strong)";
+  "inline-flex items-center gap-1 text-xs font-mono px-3 py-2 min-h-9 rounded-(--btn-radius) border border-(--theme-border) text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:border-(--theme-border-strong)";
 
 interface ProjectCardProps extends Project {
   /** Position in the list, shown as 01, 02, … */

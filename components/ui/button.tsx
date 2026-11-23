@@ -28,7 +28,8 @@ const variantClasses = {
   primary:
     "bg-(--theme-accent) text-(--theme-bg) hover:bg-(--theme-accent-hover)",
   secondary:
-    "border border-(--theme-border) text-(--theme-text) hover:border-(--theme-text-muted) hover:bg-(--theme-surface-elevated)",
+    // Stronger outline + subtle fill so it reads as a button on dark panels.
+    "border border-(--theme-border-strong) bg-(--theme-surface-elevated) text-(--theme-text) hover:border-(--theme-text-muted) hover:bg-(--theme-fill)",
   ghost:
     "text-(--theme-text-secondary) hover:text-(--theme-text) hover:bg-(--theme-surface-elevated)",
 };

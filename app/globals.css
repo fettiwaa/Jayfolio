@@ -134,6 +134,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: color var(--transition-normal) ease, background-color var(--transition-normal) ease;
+  /* Safety net against sideways scrolling on phones; `clip` (not `hidden`) keeps position: sticky working. */
+  overflow-x: clip;
 }
 
 /* Selection */
@@ -350,10 +352,16 @@ body {
       box-shadow var(--transition-normal) ease,
       background-color var(--transition-normal) ease;
   }
-  .panel-interactive:hover,
+  /* Hover styles only on devices that can hover, so taps on phones don't leave them stuck on. */
   .panel-interactive:focus-within {
     border-color: var(--theme-border-strong);
     box-shadow: inset 0 1px 0 var(--theme-panel-highlight), var(--theme-panel-shadow-hover);
+  }
+  @media (hover: hover) {
+    .panel-interactive:hover {
+      border-color: var(--theme-border-strong);
+      box-shadow: inset 0 1px 0 var(--theme-panel-highlight), var(--theme-panel-shadow-hover);
+    }
   }
   .panel-header {
     display: flex;
@@ -411,14 +419,24 @@ body {
       opacity var(--transition-fast) ease,
       translate var(--transition-fast) ease;
   }
-  .tech-tile:hover .tech-tooltip {
-    opacity: 1;
-    translate: -50% 0;
+  @media (hover: hover) {
+    .tech-tile:hover .tech-tooltip {
+      opacity: 1;
+      translate: -50% 0;
+    }
+  }
+  /* Touch screens: no hover, so drop the tooltip entirely (it would also widen the page). */
+  @media (hover: none) {
+    .tech-tooltip {
+      display: none;
+    }
   }
 
   /* Case study (MDX): every "##" section becomes its own panel (see lib/rehype-sections.ts). */
   .case-study {
     display: grid;
+    /* minmax(0, 1fr): long code lines scroll inside their block instead of widening the page. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 1rem;
     color: var(--theme-text-secondary);
     font-size: 0.9375rem;

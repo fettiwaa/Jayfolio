@@ -160,7 +160,7 @@ export default function Nav() {
             <ThemeToggle />
             <button
               type="button"
-              className="p-2 text-(--theme-text)"
+              className="p-2.5 -mr-1 text-(--theme-text)"
               onClick={() => setIsOpen(true)}
               aria-label="Open menu"
               aria-expanded={isOpen}
@@ -191,7 +191,7 @@ export default function Nav() {
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-2 text-(--theme-text)"
+                  className="p-2.5 -mr-1 text-(--theme-text)"
                   aria-label="Close menu"
                 >
                   <X size={24} aria-hidden="true" />

@@ -14,7 +14,7 @@ export function ThemeToggle() {
       type="button"
       whileTap={{ scale: 0.95 }}
       onClick={toggleTheme}
-      className="relative p-2 rounded-full bg-(--theme-surface-elevated) text-(--theme-text) border border-transparent transition-colors hover:border-(--theme-border)"
+      className="relative p-2.5 rounded-full bg-(--theme-surface-elevated) text-(--theme-text) border border-transparent transition-colors hover:border-(--theme-border)"
       aria-label={label}
       title={label}
     >

@@ -44,7 +44,7 @@ export default function TechStackPanel({
                   {String(category.items.length).padStart(2, "0")}
                 </span>
               </div>
-              <ul className="grid grid-cols-3 @xs:grid-cols-4 @md:grid-cols-5 @xl:grid-cols-6 @4xl:grid-cols-8 gap-2">
+              <ul className="grid grid-cols-4 @md:grid-cols-5 @xl:grid-cols-6 @4xl:grid-cols-8 gap-2">
                 {category.items.map((item) => (
                   <TechTile key={item} name={item} />
                 ))}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import ChatButton from "@/components/chat/chat-button";
@@ -14,6 +14,16 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
   variable: "--font-mono",
 });
+
+// Mobile browser bar colour matches the page background in each theme.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0f" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: {

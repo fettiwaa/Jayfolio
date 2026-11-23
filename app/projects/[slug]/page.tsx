@@ -149,7 +149,7 @@ export default async function ProjectCaseStudyPage({
         </Panel>
 
         {/* Side column: facts first on phones, sticky beside the write-up on desktop. */}
-        <div className="lg:col-span-4 lg:col-start-9 lg:row-start-2 lg:sticky lg:top-20 grid gap-4">
+        <div className="lg:col-span-4 lg:col-start-9 lg:row-start-2 lg:sticky lg:top-20 min-w-0 grid grid-cols-1 gap-4">
           <Panel title="Project" headingLevel={2}>
             <dl className="grid grid-cols-3 lg:grid-cols-1 gap-4">
               <div>
@@ -217,7 +217,7 @@ export default async function ProjectCaseStudyPage({
           )}
         </div>
 
-        <div className="case-study lg:col-span-8 lg:col-start-1 lg:row-start-2 [&_.cs-section]:scroll-mt-20">
+        <div className="case-study min-w-0 lg:col-span-8 lg:col-start-1 lg:row-start-2 [&_.cs-section]:scroll-mt-20">
           <MDXRemote source={source} options={mdxOptions} />
         </div>
 

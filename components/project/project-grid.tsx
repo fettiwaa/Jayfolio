@@ -33,7 +33,7 @@ export default function ProjectGrid({
   if (visibleProjects.length === 0) return null;
 
   return (
-    <div className={`grid md:grid-cols-2 gap-4 ${className}`}>
+    <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${className}`}>
       {visibleProjects.map((project, index) => (
         <ProjectCard
           key={project.slug}

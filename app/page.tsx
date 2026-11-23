@@ -67,7 +67,14 @@ export default function Home() {
       <PanelGrid className="lg:grid-cols-12">
         <HeroPanels />
 
-        <div className="lg:col-span-5 grid gap-4 content-start">
+        {/* Phones read About + Tech Stack first; on desktop each column is pinned to
+            its place in row 3 (row 1: hero + portrait, row 2: core-stack strip). */}
+        <div className="lg:col-span-7 lg:col-start-6 lg:row-start-3 min-w-0 grid grid-cols-1 gap-4 content-start">
+          <AboutPanel />
+          <TechStackPanel />
+        </div>
+
+        <div className="lg:col-span-5 lg:col-start-1 lg:row-start-3 min-w-0 grid grid-cols-1 gap-4 content-start">
           <Panel
             id="experience"
             title="Experience"
@@ -98,11 +105,6 @@ export default function Home() {
           >
             <Timeline items={educationItems} />
           </Panel>
-        </div>
-
-        <div className="lg:col-span-7 grid gap-4 content-start">
-          <AboutPanel />
-          <TechStackPanel />
         </div>
 
         <Panel
@@ -157,7 +159,7 @@ export default function Home() {
                       className="panel-inset group flex items-center gap-3 px-4 py-3 transition-colors hover:border-(--theme-border-strong)"
                     >
                       <Icon className="w-4 h-4 shrink-0 text-(--theme-text-secondary)" />
-                      <span className="text-label text-(--theme-text-muted) w-16 shrink-0">
+                      <span className="hidden sm:inline text-label text-(--theme-text-muted) w-16 shrink-0">
                         {label}
                       </span>
                       <span className="text-sm text-(--theme-text) truncate">

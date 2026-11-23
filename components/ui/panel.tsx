@@ -89,7 +89,7 @@ export function PanelGrid({ className = "", children }: PanelGridProps) {
       variants={panelContainer}
       initial="hidden"
       animate="visible"
-      className={`grid gap-4 ${className}`}
+      className={`grid grid-cols-1 gap-4 ${className}`}
     >
       {children}
     </motion.div>

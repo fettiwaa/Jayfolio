@@ -214,11 +214,11 @@ export default function ChatButton() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask me about..."
                 autoComplete="off"
-                className="flex-1 min-w-0 px-3 py-2.5 rounded-(--btn-radius) text-sm border border-(--theme-input-border) bg-(--theme-input-bg) text-(--theme-input-text) placeholder:text-(--theme-input-placeholder)"
+                className="flex-1 min-w-0 px-3 py-2.5 rounded-(--btn-radius) text-base sm:text-sm border border-(--theme-input-border) bg-(--theme-input-bg) text-(--theme-input-text) placeholder:text-(--theme-input-placeholder)"
               />
               <button
                 type="submit"
-                className="px-3 rounded-(--btn-radius) bg-(--theme-accent) text-(--theme-bg) transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                className="min-w-11 px-3 flex items-center justify-center rounded-(--btn-radius) bg-(--theme-accent) text-(--theme-bg) transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                 disabled={!input.trim() || isTyping}
                 aria-label="Send message"
               >

@@ -70,7 +70,7 @@ export default function HeroPanels() {
       initial={hasCarousel ? { opacity: 0 } : false}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: EASE_OUT }}
-      className="w-full h-full object-cover grayscale contrast-[1.05] transition-[filter] duration-500 group-hover:grayscale-0"
+      className="w-full h-full object-cover object-[50%_38%] grayscale contrast-[1.05] transition-[filter] duration-500 group-hover:grayscale-0"
       loading="eager"
     />
   );
@@ -153,7 +153,7 @@ export default function HeroPanels() {
             {photo}
           </button>
         ) : (
-          <div className="group w-full h-full min-h-72 lg:min-h-0 aspect-square lg:aspect-auto overflow-hidden rounded-[calc(var(--panel-radius)-2px)] border border-(--theme-border)">
+          <div className="group w-full h-full aspect-4/3 sm:aspect-square lg:aspect-auto overflow-hidden rounded-[calc(var(--panel-radius)-2px)] border border-(--theme-border)">
             {photo}
           </div>
         )}
@@ -161,7 +161,7 @@ export default function HeroPanels() {
 
       <motion.div
         variants={panelItem}
-        className="panel lg:col-span-12 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 px-5 py-4"
+        className="panel lg:col-span-12 min-w-0 overflow-hidden flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 px-5 py-4"
       >
         <p className="text-label text-(--theme-text-muted) shrink-0">
           <span aria-hidden="true">~/ </span>core stack

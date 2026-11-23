@@ -50,7 +50,7 @@ export default function Footer() {
                   target={isExternal ? "_blank" : undefined}
                   rel={isExternal ? "noopener noreferrer" : undefined}
                   aria-label={label}
-                  className="flex p-2 rounded-(--btn-radius) text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:bg-(--theme-surface-elevated)"
+                  className="flex p-2.5 rounded-(--btn-radius) text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:bg-(--theme-surface-elevated)"
                 >
                   <Icon className="w-4 h-4" />
                 </a>
