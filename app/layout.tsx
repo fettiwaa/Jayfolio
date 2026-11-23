@@ -4,10 +4,16 @@ import { ThemeProvider } from "@/components/theme-provider";
 import ChatButton from "@/components/chat/chat-button";
 import Nav from "@/components/layout/nav";
 import Footer from "@/components/layout/footer";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+// Labels, dates, stats and panel headers: the "technical interface" voice.
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -70,7 +76,7 @@ export default function RootLayout({
     // suppressHydrationWarning: THEME_INIT_SCRIPT may change data-theme before React loads.
     <html
       lang="en"
-      className={inter.variable}
+      className={`${inter.variable} ${jetbrainsMono.variable}`}
       data-theme="dark"
       suppressHydrationWarning
     >

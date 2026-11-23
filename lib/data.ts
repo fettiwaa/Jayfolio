@@ -87,17 +87,10 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     label: "Backend",
-    items: [
-      "Laravel",
-      "PHP",
-      "Node.js",
-      "Express",
-      "Supabase",
-      "PostgreSQL",
-      "MySQL",
-    ],
+    items: ["Laravel", "PHP", "Node.js", "Express", "Supabase"],
   },
   {
+    // PostgreSQL and MySQL live here only (they were also listed under Backend).
     label: "Database",
     items: ["SQL", "PostgreSQL", "MySQL", "Prisma", "Firebase"],
   },

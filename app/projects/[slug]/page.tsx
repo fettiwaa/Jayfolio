@@ -6,10 +6,12 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { AnimatedPill } from "@/components/ui/animated-pill";
 import { Button } from "@/components/ui/button";
 import { ProjectStatus } from "@/components/ui/project-status";
+import { Panel, PanelGrid } from "@/components/ui/panel";
+import { TechLogo } from "@/components/ui/tech-tile";
 import { projects } from "@/lib/data";
+import { rehypeSections, slugifyHeading } from "@/lib/rehype-sections";
 
 const projectsDir = path.join(process.cwd(), "content", "projects");
 
@@ -23,6 +25,15 @@ function getAdjacentProjects(slug: string) {
   const prev = index > 0 ? featured[index - 1] : null;
   const next = index < featured.length - 1 ? featured[index + 1] : null;
   return { prev, next };
+}
+
+/** "## Heading" lines outside code blocks, for the contents list. */
+function getSectionHeadings(source: string) {
+  const withoutCode = source.replace(/```[\s\S]*?```/g, "");
+  return Array.from(withoutCode.matchAll(/^## (.+)$/gm), (match) => {
+    const text = match[1].trim();
+    return { text, id: slugifyHeading(text) };
+  });
 }
 
 export function generateStaticParams() {
@@ -65,131 +76,193 @@ export default async function ProjectCaseStudyPage({
     parseFrontmatter: true,
     mdxOptions: {
       remarkPlugins: [remarkGfm],
-      rehypePlugins: [rehypeHighlight],
+      // rehypeSections wraps each "##" section in its own panel.
+      rehypePlugins: [rehypeHighlight, rehypeSections],
     },
   };
 
   const { prev, next } = getAdjacentProjects(slug);
+  const sections = getSectionHeadings(source);
 
   return (
-    <article className="section-padding">
-      <div className="max-width-content mx-auto section-padding-x">
-        <Link
-          href="/projects"
-          className="inline-flex items-center gap-1.5 text-sm mb-10 text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
-        >
-          <ArrowLeft size={16} aria-hidden="true" />
-          Back to Projects
-        </Link>
-
-        <header className="mb-12 pb-10 border-b border-(--theme-border)">
-          <h1 className="text-display text-(--theme-text) mb-5">
-            {project.title}
-          </h1>
-          <p className="text-lead max-w-2xl text-(--theme-text-secondary)">
-            {project.description}
-          </p>
-
-          <dl className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-4 max-w-xl">
-            <div>
-              <dt className="text-label text-(--theme-text-muted)">Year</dt>
-              <dd className="mt-1 text-sm text-(--theme-text)">
-                {project.year}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-label text-(--theme-text-muted)">Status</dt>
-              <dd className="mt-1 text-sm text-(--theme-text)">
-                <ProjectStatus status={project.status} />
-              </dd>
-            </div>
-            <div>
-              <dt className="text-label text-(--theme-text-muted)">Role</dt>
-              <dd className="mt-1 text-sm text-(--theme-text)">
-                {project.role}
-              </dd>
-            </div>
-          </dl>
-
-          <ul
-            className="mt-6 flex flex-wrap gap-2"
-            aria-label="Technologies used"
-          >
-            {project.tech.map((t, i) => (
-              <li key={t}>
-                <AnimatedPill label={t} delay={i * 0.04} />
+    <div className="max-width-content mx-auto section-padding-x section-padding">
+      <PanelGrid className="lg:grid-cols-12 items-start">
+        <Panel as="div" flush className="lg:col-span-12">
+          <nav aria-label="Breadcrumb" className="panel-header">
+            <ol className="flex items-center gap-1.5 text-label text-(--theme-text-muted) min-w-0">
+              <li>
+                <Link
+                  href="/"
+                  className="transition-colors hover:text-(--theme-text)"
+                >
+                  jayfolio
+                </Link>
               </li>
-            ))}
-          </ul>
-        </header>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link
+                  href="/projects"
+                  className="transition-colors hover:text-(--theme-text)"
+                >
+                  projects
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="text-(--theme-text) truncate">
+                {project.slug}
+              </li>
+            </ol>
+            <span className="text-label text-(--theme-text-muted) shrink-0">
+              {project.year}
+            </span>
+          </nav>
+          <div className="panel-body">
+            <h1 className="text-display text-(--theme-text)">
+              {project.title}
+            </h1>
+            <p className="text-lead mt-3 max-w-2xl text-(--theme-text-secondary)">
+              {project.description}
+            </p>
+            {(project.github || project.demo) && (
+              <div className="mt-5 flex flex-wrap gap-3">
+                {project.github && (
+                  <Button
+                    href={project.github}
+                    variant="secondary"
+                    icon={<ArrowUpRight size={16} />}
+                  >
+                    GitHub Repository
+                  </Button>
+                )}
+                {project.demo && (
+                  <Button
+                    href={project.demo}
+                    variant="secondary"
+                    icon={<ArrowUpRight size={16} />}
+                  >
+                    Live Demo
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        </Panel>
 
-        <div className="case-study">
+        {/* Side column: facts first on phones, sticky beside the write-up on desktop. */}
+        <div className="lg:col-span-4 lg:col-start-9 lg:row-start-2 lg:sticky lg:top-20 grid gap-4">
+          <Panel title="Project" headingLevel={2}>
+            <dl className="grid grid-cols-3 lg:grid-cols-1 gap-4">
+              <div>
+                <dt className="text-label text-(--theme-text-muted)">Year</dt>
+                <dd className="mt-1 text-sm text-(--theme-text)">
+                  {project.year}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-label text-(--theme-text-muted)">Status</dt>
+                <dd className="mt-1 text-sm text-(--theme-text)">
+                  <ProjectStatus status={project.status} />
+                </dd>
+              </div>
+              <div>
+                <dt className="text-label text-(--theme-text-muted)">Role</dt>
+                <dd className="mt-1 text-sm text-(--theme-text)">
+                  {project.role}
+                </dd>
+              </div>
+            </dl>
+            <h3 className="mt-5 mb-2 text-label text-(--theme-text-muted)">
+              Stack
+            </h3>
+            <ul className="flex flex-wrap gap-1.5">
+              {project.tech.map((t) => (
+                <li
+                  key={t}
+                  className="inline-flex items-center gap-1.5 px-2 py-1 rounded-(--badge-radius) border border-(--theme-border) bg-(--theme-surface-elevated) text-xs font-mono text-(--theme-text-secondary)"
+                >
+                  <TechLogo name={t} size={12} />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </Panel>
+
+          {sections.length > 1 && (
+            <Panel
+              title="Contents"
+              meta={`${sections.length} sections`}
+              className="hidden lg:flex"
+            >
+              <nav aria-label="Case study sections">
+                <ol className="space-y-1.5 text-sm">
+                  {sections.map((section, i) => (
+                    <li key={section.id}>
+                      <a
+                        href={`#${section.id}`}
+                        className="flex gap-3 text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="font-mono text-xs text-(--theme-text-muted) pt-0.5"
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        {section.text}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </Panel>
+          )}
+        </div>
+
+        <div className="case-study lg:col-span-8 lg:col-start-1 lg:row-start-2 [&_.cs-section]:scroll-mt-20">
           <MDXRemote source={source} options={mdxOptions} />
         </div>
 
-        {(project.github || project.demo) && (
-          <div className="mt-14 flex flex-wrap gap-3">
-            {project.github && (
-              <Button
-                href={project.github}
-                variant="secondary"
-                icon={<ArrowUpRight size={16} />}
-              >
-                GitHub Repository
-              </Button>
-            )}
-            {project.demo && (
-              <Button
-                href={project.demo}
-                variant="secondary"
-                icon={<ArrowUpRight size={16} />}
-              >
-                Live Demo
-              </Button>
-            )}
-          </div>
-        )}
-
-        <nav
-          aria-label="More projects"
-          className="mt-14 pt-8 border-t border-(--theme-border) grid grid-cols-3 items-center gap-4 text-sm"
-        >
-          <div>
-            {prev && (
-              <Link
-                href={`/projects/${prev.slug}`}
-                className="inline-flex items-center gap-2 text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
-              >
-                <ArrowLeft size={16} aria-hidden="true" />
-                <span>
-                  <span className="sr-only">Previous project: </span>
-                  {prev.title}
-                </span>
-              </Link>
-            )}
-          </div>
-          <Link
-            href="/projects"
-            className="justify-self-center text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+        <Panel as="div" flush className="lg:col-span-12">
+          <nav
+            aria-label="More projects"
+            className="grid grid-cols-3 items-center gap-4 px-5 py-4 text-sm"
           >
-            All Projects
-          </Link>
-          <div className="justify-self-end">
-            {next && (
-              <Link
-                href={`/projects/${next.slug}`}
-                className="inline-flex items-center gap-2 text-right text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
-              >
-                <span>
-                  <span className="sr-only">Next project: </span>
-                  {next.title}
-                </span>
-                <ArrowRight size={16} aria-hidden="true" />
-              </Link>
-            )}
-          </div>
-        </nav>
-      </div>
-    </article>
+            <div>
+              {prev && (
+                <Link
+                  href={`/projects/${prev.slug}`}
+                  className="inline-flex items-center gap-2 text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+                >
+                  <ArrowLeft size={16} aria-hidden="true" />
+                  <span>
+                    <span className="sr-only">Previous project: </span>
+                    {prev.title}
+                  </span>
+                </Link>
+              )}
+            </div>
+            <Link
+              href="/projects"
+              className="justify-self-center text-label text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+            >
+              All projects
+            </Link>
+            <div className="justify-self-end">
+              {next && (
+                <Link
+                  href={`/projects/${next.slug}`}
+                  className="inline-flex items-center gap-2 text-right text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+                >
+                  <span>
+                    <span className="sr-only">Next project: </span>
+                    {next.title}
+                  </span>
+                  <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              )}
+            </div>
+          </nav>
+        </Panel>
+      </PanelGrid>
+    </div>
   );
 }

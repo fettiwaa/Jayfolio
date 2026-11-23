@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { chatSuggestions, getResponse } from "@/lib/chat";
 import type { ChatMessage } from "@/lib/chat";
 import { useDialog } from "@/lib/use-dialog";
+import { DURATION, EASE_OUT } from "@/lib/animations";
 
 const PANEL_ID = "jaja-chat";
 const REPLY_DELAY_MS = 600;
@@ -91,25 +92,30 @@ export default function ChatButton() {
             id={PANEL_ID}
             role="dialog"
             aria-label="Chat with Jaja"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-(--card-radius) shadow-2xl overflow-hidden flex flex-col border border-(--theme-border) bg-(--theme-surface)"
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.98 }}
+            transition={{ duration: DURATION.base, ease: EASE_OUT }}
+            style={{ transformOrigin: "bottom right" }}
+            className="panel fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm overflow-hidden flex flex-col shadow-2xl"
           >
-            <div className="px-4 py-3 flex items-center justify-between border-b border-(--theme-border)">
-              <div className="flex items-center gap-2">
+            <div className="panel-header px-4! sm:px-4!">
+              <div className="flex items-center gap-2 min-w-0">
                 <span
                   aria-hidden="true"
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold bg-(--theme-accent) text-(--theme-bg)"
-                >
-                  J
+                  className="w-1.5 h-1.5 rounded-full bg-(--theme-text-muted)"
+                />
+                <span className="text-label font-semibold text-(--theme-text)">
+                  <span
+                    aria-hidden="true"
+                    className="text-(--theme-text-muted)"
+                  >
+                    ~/{" "}
+                  </span>
+                  jaja
                 </span>
-                <span className="text-sm font-medium text-(--theme-text)">
-                  Jaja
-                </span>
-                <span className="text-xs text-(--theme-text-muted)">
-                  · quick answers about Jaycee
+                <span className="text-label text-(--theme-text-muted) truncate">
+                  · quick answers
                 </span>
               </div>
               <button

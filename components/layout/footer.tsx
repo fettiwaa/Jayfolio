@@ -1,8 +1,9 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { Mail } from "lucide-react";
 import { site } from "@/lib/constants";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
-
-const techStack = ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"];
 
 interface SocialLink {
   href: string;
@@ -16,50 +17,47 @@ const socialLinks: SocialLink[] = [
   { href: `mailto:${site.email}`, label: "Email", icon: Mail },
 ];
 
+/** Status-bar footer: current path, credits, social links. */
 export default function Footer() {
+  const pathname = usePathname();
+  const path = pathname === "/" ? "~" : `~${pathname}`;
+
   return (
-    <footer className="border-t border-(--theme-border)">
-      <div className="max-width-content mx-auto section-padding-x py-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-sm text-(--theme-text-secondary)">
-            Designed &amp; Developed by {site.name}
-          </p>
-
-          <ul className="flex items-center gap-2">
-            {socialLinks.map(({ href, label, icon: Icon }) => {
-              const isExternal = href.startsWith("http");
-              return (
-                <li key={label}>
-                  <a
-                    href={href}
-                    target={isExternal ? "_blank" : undefined}
-                    rel={isExternal ? "noopener noreferrer" : undefined}
-                    aria-label={label}
-                    className="flex p-2.5 rounded-full text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:bg-(--theme-surface-elevated)"
-                  >
-                    <Icon className="w-5 h-5" />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-
-          <p className="text-xs text-(--theme-text-muted)">
-            Built with{" "}
-            {techStack.map((tech, i) => (
-              <span key={tech}>
-                <span className="text-(--theme-text-secondary)">{tech}</span>
-                {i < techStack.length - 1 && (
-                  <span aria-hidden="true"> · </span>
-                )}
-              </span>
-            ))}
-          </p>
-        </div>
-
-        <p className="border-t border-(--theme-border) mt-8 pt-6 text-center text-xs text-(--theme-text-muted)">
-          © {new Date().getFullYear()} {site.name}. All rights reserved.
+    <footer className="border-t border-(--theme-border) bg-(--theme-surface)">
+      <div className="max-width-content mx-auto section-padding-x py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-label text-(--theme-text-muted) flex items-center gap-2 order-2 sm:order-1">
+          <span
+            aria-hidden="true"
+            className="w-1.5 h-1.5 rounded-full bg-(--theme-text-muted)"
+          />
+          <span>
+            jayfolio <span aria-hidden="true">{path}</span>
+          </span>
         </p>
+
+        <p className="text-xs text-(--theme-text-muted) order-3 sm:order-2 text-center">
+          © {new Date().getFullYear()} {site.name} · Built with Next.js,
+          TypeScript, Tailwind CSS &amp; Framer Motion
+        </p>
+
+        <ul className="flex items-center gap-1 order-1 sm:order-3">
+          {socialLinks.map(({ href, label, icon: Icon }) => {
+            const isExternal = href.startsWith("http");
+            return (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  aria-label={label}
+                  className="flex p-2 rounded-(--btn-radius) text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:bg-(--theme-surface-elevated)"
+                >
+                  <Icon className="w-4 h-4" />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </footer>
   );

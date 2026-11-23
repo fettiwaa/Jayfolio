@@ -93,12 +93,32 @@ export default function Nav() {
         >
           <Link
             href="/"
-            className="text-sm font-semibold tracking-tight text-(--theme-text)"
+            className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-(--theme-text)"
           >
+            {/* Same "J" monogram as the favicon. */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 32 32"
+              className="w-6 h-6 shrink-0"
+            >
+              <rect
+                width="32"
+                height="32"
+                rx="7"
+                className="fill-(--theme-text)"
+              />
+              <path
+                d="M19.5 8v10.5a5 5 0 0 1-10 0"
+                fill="none"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                className="stroke-(--theme-bg)"
+              />
+            </svg>
             Jaycee Andal
           </Link>
 
-          <ul className="hidden md:flex items-center gap-7">
+          <ul className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => {
               const isActive = isLinkActive(link.href);
               return (
@@ -108,7 +128,7 @@ export default function Nav() {
                     aria-current={
                       isActive ? (isHome ? "location" : "page") : undefined
                     }
-                    className={`text-sm transition-colors ${
+                    className={`text-label transition-colors ${
                       isActive
                         ? "text-(--theme-text)"
                         : "text-(--theme-text-secondary) hover:text-(--theme-text)"
@@ -120,7 +140,12 @@ export default function Nav() {
                     <motion.span
                       layoutId="active-underline-nav"
                       aria-hidden="true"
-                      className="absolute -bottom-1.5 left-0 right-0 h-px bg-(--theme-text)"
+                      className="absolute -bottom-2 left-0 right-0 h-px bg-(--theme-text)"
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 40,
+                      }}
                     />
                   )}
                 </li>

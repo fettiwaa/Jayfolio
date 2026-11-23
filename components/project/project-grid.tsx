@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import ProjectCard from "@/components/project/project-card";
 import { projects } from "@/lib/data";
 import type { Project } from "@/lib/types";
@@ -8,21 +7,20 @@ import type { Project } from "@/lib/types";
 interface ProjectGridProps {
   featuredOnly?: boolean;
   limit?: number;
+  className?: string;
+  /** Heading level for card titles; 2 when the grid sits directly under a page h1. */
+  headingLevel?: 2 | 3;
 }
 
-const container = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-// The parent section supplies the container width and side padding.
+/**
+ * Project panels in a two-column grid. Rendered inside a PanelGrid, which
+ * reveals the cards (their variants inherit from it).
+ */
 export default function ProjectGrid({
   featuredOnly = false,
   limit,
+  className = "",
+  headingLevel = 3,
 }: ProjectGridProps) {
   const displayProjects: Project[] = featuredOnly
     ? projects.filter((p) => p.featured)
@@ -35,16 +33,15 @@ export default function ProjectGrid({
   if (visibleProjects.length === 0) return null;
 
   return (
-    <motion.div
-      variants={container}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-      className="grid md:grid-cols-2 gap-6 md:gap-8"
-    >
-      {visibleProjects.map((project) => (
-        <ProjectCard key={project.slug} {...project} />
+    <div className={`grid md:grid-cols-2 gap-4 ${className}`}>
+      {visibleProjects.map((project, index) => (
+        <ProjectCard
+          key={project.slug}
+          index={index}
+          headingLevel={headingLevel}
+          {...project}
+        />
       ))}
-    </motion.div>
+    </div>
   );
 }

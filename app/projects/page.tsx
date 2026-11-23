@@ -1,5 +1,6 @@
 import ProjectGrid from "@/components/project/project-grid";
-import { SectionTitle } from "@/components/ui/section-title";
+import { PageHeader } from "@/components/ui/page-header";
+import { PanelGrid } from "@/components/ui/panel";
 
 export const metadata = {
   title: "Projects",
@@ -7,15 +8,15 @@ export const metadata = {
 
 export default function ProjectsPage() {
   return (
-    <section className="section-padding">
-      <div className="max-width-content mx-auto section-padding-x">
-        <SectionTitle
-          as="h1"
+    <div className="max-width-content mx-auto section-padding-x section-padding">
+      <PanelGrid>
+        <PageHeader
+          path="projects"
           title="Selected Work"
           subtitle="Things I've designed and built, from this portfolio to tooling for AI coding agents."
         />
-        <ProjectGrid />
-      </div>
-    </section>
+        <ProjectGrid headingLevel={2} />
+      </PanelGrid>
+    </div>
   );
 }

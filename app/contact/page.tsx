@@ -1,121 +1,108 @@
-"use client";
-
-import { Mail } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowUpRight, Mail } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel, PanelGrid } from "@/components/ui/panel";
 import { Button } from "@/components/ui/button";
-import { SectionTitle } from "@/components/ui/section-title";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
-import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { site } from "@/lib/constants";
 
-const contactInfo = [
+const channels = [
   {
     label: "Email",
     value: site.email,
-    icon: Mail,
     href: `mailto:${site.email}`,
+    icon: Mail,
   },
   {
     label: "GitHub",
     value: "github.com/fettiwaa",
-    icon: GitHubIcon,
     href: site.github,
+    icon: GitHubIcon,
   },
   {
     label: "LinkedIn",
     value: "linkedin.com/in/jaycee-andal",
-    icon: LinkedInIcon,
     href: site.linkedin,
+    icon: LinkedInIcon,
   },
 ];
 
 export default function ContactPage() {
   return (
-    <section className="section-padding">
-      <div className="max-width-content mx-auto section-padding-x">
-        <SectionTitle
-          as="h1"
-          title="Get in Touch"
-          subtitle="Let's build something together."
-        />
+    <div className="max-width-content mx-auto section-padding-x section-padding">
+      <PanelGrid className="lg:grid-cols-12 items-start">
+        <div className="lg:col-span-12">
+          <PageHeader
+            path="contact"
+            title="Get in Touch"
+            subtitle="Let's build something together."
+          />
+        </div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="grid lg:grid-cols-2 gap-12 lg:gap-16"
+        <Panel
+          title="Channels"
+          meta={`${channels.length} links`}
+          className="lg:col-span-7"
         >
-          <motion.div variants={fadeInUp} className="space-y-10">
-            <ul className="space-y-2">
-              {contactInfo.map((info) => {
-                const Icon = info.icon;
-                const isExternal = info.href.startsWith("http");
-                return (
-                  <li key={info.label}>
-                    <a
-                      href={info.href}
-                      target={isExternal ? "_blank" : undefined}
-                      rel={isExternal ? "noopener noreferrer" : undefined}
-                      className="group flex items-center gap-4 p-3 -mx-3 rounded-(--btn-radius) transition-colors hover:bg-(--theme-surface-elevated)"
-                    >
-                      <span className="w-10 h-10 shrink-0 rounded-(--btn-radius) flex items-center justify-center border border-(--theme-border) text-(--theme-text)">
-                        <Icon
-                          className="w-[18px] h-[18px]"
-                          aria-hidden="true"
-                        />
+          <ul className="grid gap-2">
+            {channels.map(({ label, value, href, icon: Icon }) => {
+              const isExternal = href.startsWith("http");
+              return (
+                <li key={label}>
+                  <a
+                    href={href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                    className="panel-inset group flex items-center gap-4 px-4 py-3.5 transition-colors hover:border-(--theme-border-strong)"
+                  >
+                    <span className="w-9 h-9 shrink-0 rounded-(--btn-radius) flex items-center justify-center border border-(--theme-border) bg-(--theme-surface) text-(--theme-text)">
+                      <Icon className="w-4 h-4" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-label text-(--theme-text-muted)">
+                        {label}
                       </span>
-                      <span className="min-w-0">
-                        <span className="block text-label text-(--theme-text-muted)">
-                          {info.label}
-                        </span>
-                        <span className="block text-sm text-(--theme-text) break-all group-hover:underline underline-offset-4">
-                          {info.value}
-                        </span>
+                      <span className="block text-sm text-(--theme-text) break-all">
+                        {value}
                       </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
+                    </span>
+                    <ArrowUpRight
+                      size={16}
+                      aria-hidden="true"
+                      className="ml-auto shrink-0 text-(--theme-text-muted) transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-5 text-sm leading-relaxed text-(--theme-text-secondary)">
+            I&apos;m always open to discussing new projects, creative ideas, or
+            opportunities to be part of your vision. Feel free to reach out via
+            email or through any of the channels above.
+          </p>
+        </Panel>
 
-            <div className="pt-8 border-t border-(--theme-border)">
-              <h2 className="text-subsection text-(--theme-text) mb-3">
-                Let&apos;s Build Something Together
-              </h2>
-              <p className="leading-relaxed text-(--theme-text-secondary)">
-                I&apos;m always open to discussing new projects, creative ideas,
-                or opportunities to be part of your vision. Feel free to reach
-                out via email or through any of the channels above.
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div variants={fadeInUp}>
-            <div className="p-6 md:p-8 rounded-(--card-radius) border border-(--theme-border) bg-(--theme-surface) space-y-4">
-              <h2 className="text-subsection text-(--theme-text)">
-                Send me an email
-              </h2>
-              <p className="text-sm leading-relaxed text-(--theme-text-secondary)">
-                The quickest way to reach me is by email at{" "}
-                <span className="text-(--theme-text) break-all">
-                  {site.email}
-                </span>
-                . I usually reply within a couple of days.
-              </p>
-              <Button
-                href={`mailto:${site.email}`}
-                variant="primary"
-                size="md"
-                className="w-full"
-                icon={<Mail size={16} />}
-              >
-                Email me
-              </Button>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-    </section>
+        <Panel title="Email" meta="fastest" className="lg:col-span-5">
+          <h3 className="text-subsection text-(--theme-text)">
+            Send me an email
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-(--theme-text-secondary)">
+            The quickest way to reach me is by email at{" "}
+            <span className="text-(--theme-text) break-all">{site.email}</span>.
+            I usually reply within a couple of days.
+          </p>
+          <div className="mt-5">
+            <Button
+              href={`mailto:${site.email}`}
+              variant="primary"
+              className="w-full"
+              icon={<Mail size={16} />}
+            >
+              Email me
+            </Button>
+          </div>
+        </Panel>
+      </PanelGrid>
+    </div>
   );
 }

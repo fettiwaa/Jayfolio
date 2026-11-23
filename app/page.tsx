@@ -1,161 +1,181 @@
-"use client";
-
-import { ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
-import HeroSection from "@/components/sections/hero";
-import AboutSection from "@/components/sections/about";
-import SkillsSection from "@/components/sections/skills";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight, Mail } from "lucide-react";
+import HeroPanels from "@/components/sections/hero";
+import AboutPanel from "@/components/sections/about";
+import TechStackPanel from "@/components/sections/skills";
 import ProjectGrid from "@/components/project/project-grid";
+import { Panel, PanelGrid } from "@/components/ui/panel";
 import { Timeline } from "@/components/ui/timeline";
 import { ExperienceEmpty } from "@/components/ui/experience-empty";
-import { SectionTitle } from "@/components/ui/section-title";
 import { Button } from "@/components/ui/button";
-import { experiences, educationData } from "@/lib/data";
+import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
+import { experiences, educationData, projects } from "@/lib/data";
 import { site } from "@/lib/constants";
-import { fadeInUp } from "@/lib/animations";
 
-const linkClasses =
-  "text-(--theme-text-secondary) underline-offset-4 transition-colors hover:text-(--theme-text) hover:underline";
+const experienceItems = experiences.map((exp) => ({
+  period: exp.period,
+  title: exp.title,
+  subtitle: exp.company,
+  location: exp.location,
+  tags: ["Laravel", "PHP", "Git"],
+  details: exp.responsibilities.map((r) => ({
+    type: "text" as const,
+    content: r,
+  })),
+}));
 
+const educationItems = educationData.map((edu) => ({
+  period: edu.period,
+  title: edu.degree,
+  subtitle: edu.school,
+  location: edu.location,
+  details: [
+    { type: "text" as const, content: "Expected Graduation: 2027" },
+    ...(edu.awards?.map((a) => ({ type: "text" as const, content: a })) ?? []),
+  ],
+}));
+
+const channels = [
+  {
+    label: "Email",
+    value: site.email,
+    href: `mailto:${site.email}`,
+    icon: Mail,
+  },
+  {
+    label: "GitHub",
+    value: "github.com/fettiwaa",
+    href: site.github,
+    icon: GitHubIcon,
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin.com/in/jaycee-andal",
+    href: site.linkedin,
+    icon: LinkedInIcon,
+  },
+];
+
+const panelLinkClasses =
+  "inline-flex items-center gap-1 normal-case tracking-normal font-sans text-xs text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)";
+
+// Section ids (about, projects, experience, skills, education, contact) match the
+// nav links so the nav can highlight the panel in view.
 export default function Home() {
-  const experienceItems = experiences.map((exp) => ({
-    period: exp.period,
-    title: exp.title,
-    subtitle: exp.company,
-    location: exp.location,
-    tags: ["Laravel", "PHP", "Git"],
-    details: exp.responsibilities.map((r) => ({
-      type: "text" as const,
-      content: r,
-    })),
-  }));
-
-  const educationItems = educationData.map((edu) => ({
-    period: edu.period,
-    title: edu.degree,
-    subtitle: edu.school,
-    location: edu.location,
-    details: [
-      { type: "text" as const, content: "Expected Graduation: 2027" },
-      ...(edu.awards?.map((a) => ({
-        type: "text" as const,
-        content: `Award: ${a}`,
-      })) || []),
-    ],
-  }));
-
   return (
-    <>
-      <HeroSection />
+    <div className="max-width-content mx-auto section-padding-x pt-6 pb-16 md:pt-8 md:pb-20">
+      <PanelGrid className="lg:grid-cols-12">
+        <HeroPanels />
 
-      <AboutSection />
-
-      {/* Section ids match the nav links so the nav can highlight the current section. */}
-      <section id="projects" className="section-padding">
-        <div className="max-width-content mx-auto section-padding-x">
-          <SectionTitle
-            title="Selected Work"
-            subtitle="Things I've designed and built, from this portfolio to tooling for AI coding agents."
-          />
-          <ProjectGrid featuredOnly limit={4} />
-          <div className="mt-10">
-            <Button
-              href="/projects"
-              variant="secondary"
-              icon={<ArrowUpRight size={16} />}
-            >
-              View All Projects
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      <section id="experience" className="section-padding-sm">
-        <div className="max-width-content mx-auto section-padding-x">
-          <SectionTitle
+        <div className="lg:col-span-5 grid gap-4 content-start">
+          <Panel
+            id="experience"
             title="Experience"
-            subtitle="My professional journey in software engineering."
-          />
-          <Timeline items={experienceItems} emptyState={<ExperienceEmpty />} />
-          {experienceItems.length > 0 && (
-            <div className="mt-10">
-              <Button
-                href="/experience"
-                variant="secondary"
-                icon={<ArrowUpRight size={16} />}
-              >
-                View Full Experience
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <SkillsSection />
-
-      <section id="education" className="section-padding-sm">
-        <div className="max-width-content mx-auto section-padding-x">
-          <SectionTitle
-            title="Education"
-            subtitle="My academic background and relevant coursework."
-          />
-          <Timeline items={educationItems} />
-        </div>
-      </section>
-
-      <section
-        id="contact"
-        className="section-padding border-t border-(--theme-border) mt-12 md:mt-16"
-      >
-        <div className="max-width-content mx-auto section-padding-x">
-          <motion.div
-            className="text-center max-w-2xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={fadeInUp}
+            meta={
+              experienceItems.length > 0 ? (
+                <Link href="/experience" className={panelLinkClasses}>
+                  View all <ArrowRight size={12} aria-hidden="true" />
+                </Link>
+              ) : (
+                `${experienceItems.length} entries`
+              )
+            }
           >
-            <h2 className="text-section text-(--theme-text) mb-4">
-              Let&apos;s Build Something Together
-            </h2>
-            <p className="text-lead mb-8 text-(--theme-text-secondary)">
-              I&apos;m always open to discussing new projects, creative ideas,
-              or opportunities to be part of your vision.
-            </p>
-            <Button href="/contact" variant="primary" size="lg">
-              Get in Touch
-            </Button>
+            <Timeline
+              items={experienceItems}
+              emptyState={<ExperienceEmpty />}
+            />
+          </Panel>
 
-            <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
-              <li>
-                <a href={`mailto:${site.email}`} className={linkClasses}>
-                  {site.email}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={site.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClasses}
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href={site.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClasses}
-                >
-                  LinkedIn
-                </a>
-              </li>
-            </ul>
-          </motion.div>
+          <Panel
+            id="education"
+            title="Education"
+            meta={
+              <Link href="/education" className={panelLinkClasses}>
+                Details <ArrowRight size={12} aria-hidden="true" />
+              </Link>
+            }
+          >
+            <Timeline items={educationItems} />
+          </Panel>
         </div>
-      </section>
-    </>
+
+        <div className="lg:col-span-7 grid gap-4 content-start">
+          <AboutPanel />
+          <TechStackPanel />
+        </div>
+
+        <Panel
+          id="projects"
+          title="Selected Work"
+          meta={
+            <Link href="/projects" className={panelLinkClasses}>
+              All {projects.length} projects{" "}
+              <ArrowRight size={12} aria-hidden="true" />
+            </Link>
+          }
+          className="lg:col-span-12"
+          bodyClassName="bg-(--theme-bg)/40"
+        >
+          <ProjectGrid featuredOnly limit={4} />
+        </Panel>
+
+        <Panel
+          id="contact"
+          title="Contact"
+          meta="say hello"
+          className="lg:col-span-12"
+        >
+          <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-center">
+            <div>
+              <h3 className="text-section text-(--theme-text)">
+                Let&apos;s Build Something Together
+              </h3>
+              <p className="text-lead mt-3 text-(--theme-text-secondary)">
+                I&apos;m always open to discussing new projects, creative ideas,
+                or opportunities to be part of your vision.
+              </p>
+              <div className="mt-5">
+                <Button
+                  href="/contact"
+                  variant="primary"
+                  icon={<ArrowRight size={16} />}
+                >
+                  Get in Touch
+                </Button>
+              </div>
+            </div>
+            <ul className="grid gap-2">
+              {channels.map(({ label, value, href, icon: Icon }) => {
+                const isExternal = href.startsWith("http");
+                return (
+                  <li key={label}>
+                    <a
+                      href={href}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                      className="panel-inset group flex items-center gap-3 px-4 py-3 transition-colors hover:border-(--theme-border-strong)"
+                    >
+                      <Icon className="w-4 h-4 shrink-0 text-(--theme-text-secondary)" />
+                      <span className="text-label text-(--theme-text-muted) w-16 shrink-0">
+                        {label}
+                      </span>
+                      <span className="text-sm text-(--theme-text) truncate">
+                        {value}
+                      </span>
+                      <ArrowUpRight
+                        size={14}
+                        aria-hidden="true"
+                        className="ml-auto shrink-0 text-(--theme-text-muted) transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </Panel>
+      </PanelGrid>
+    </div>
   );
 }

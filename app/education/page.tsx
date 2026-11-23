@@ -1,77 +1,84 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { SectionTitle } from "@/components/ui/section-title";
-import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel, PanelGrid } from "@/components/ui/panel";
 import { educationData } from "@/lib/data";
-import { fadeInUp, staggerContainer } from "@/lib/animations";
+
+export const metadata = {
+  title: "Education",
+};
 
 export default function EducationPage() {
   return (
-    <section className="section-padding">
-      <div className="max-width-content mx-auto section-padding-x">
-        <SectionTitle
-          as="h1"
-          title="Education"
-          subtitle="My academic background."
-        />
+    <div className="max-width-content mx-auto section-padding-x section-padding">
+      <PanelGrid className="lg:grid-cols-12">
+        <div className="lg:col-span-12">
+          <PageHeader
+            path="education"
+            title="Education"
+            subtitle="My academic background."
+          />
+        </div>
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="space-y-12"
-        >
-          {educationData.map((edu) => (
-            <motion.article
-              key={edu.degree}
-              variants={fadeInUp}
-              className="py-8 border-y border-(--theme-border)"
-            >
-              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2 mb-2">
-                <h2 className="text-subsection text-(--theme-text)">
+        {educationData.map((edu) => (
+          <Panel
+            key={edu.degree}
+            as="article"
+            title="Degree"
+            meta={edu.period}
+            className="lg:col-span-12"
+          >
+            <div className="grid lg:grid-cols-12 gap-6">
+              <div className="lg:col-span-5">
+                <h3 className="text-section text-(--theme-text)">
                   {edu.degree}
-                </h2>
-                <time className="text-label text-(--theme-text-muted)">
-                  {edu.period}
-                </time>
-              </div>
-              <p className="text-(--theme-text-secondary)">
-                {edu.school} · {edu.location}
-              </p>
+                </h3>
+                <p className="mt-2 text-(--theme-text-secondary)">
+                  {edu.school}
+                </p>
+                <p className="text-xs font-mono text-(--theme-text-muted)">
+                  {edu.location}
+                </p>
 
-              {edu.awards && edu.awards.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-label text-(--theme-text-muted) mb-2">
-                    Awards
-                  </h3>
-                  <ul className="space-y-1 text-sm text-(--theme-text)">
-                    {edu.awards.map((award) => (
-                      <li key={award}>{award}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                {edu.awards && edu.awards.length > 0 && (
+                  <div className="panel-inset mt-5 px-4 py-3">
+                    <h4 className="text-label text-(--theme-text-muted) mb-2">
+                      Awards
+                    </h4>
+                    <ul className="space-y-1 text-sm font-mono text-(--theme-text)">
+                      {edu.awards.map((award) => (
+                        <li key={award}>{award}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
 
               {edu.coursework.length > 0 && (
-                <div className="mt-6">
-                  <h3 className="text-label text-(--theme-text-muted) mb-3">
+                <div className="lg:col-span-7">
+                  <h4 className="text-label text-(--theme-text-muted) mb-3">
                     Relevant Coursework
-                  </h3>
-                  <ul className="flex flex-wrap gap-2">
-                    {edu.coursework.map((course) => (
-                      <li key={course}>
-                        <Badge variant="outline">{course}</Badge>
+                  </h4>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {edu.coursework.map((course, i) => (
+                      <li
+                        key={course}
+                        className="panel-inset flex items-center gap-3 px-3 py-2 text-sm text-(--theme-text-secondary)"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className="font-mono text-xs text-(--theme-text-muted)"
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        {course}
                       </li>
                     ))}
                   </ul>
                 </div>
               )}
-            </motion.article>
-          ))}
-        </motion.div>
-      </div>
-    </section>
+            </div>
+          </Panel>
+        ))}
+      </PanelGrid>
+    </div>
   );
 }

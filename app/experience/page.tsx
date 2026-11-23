@@ -1,6 +1,7 @@
 import { Timeline } from "@/components/ui/timeline";
 import { ExperienceEmpty } from "@/components/ui/experience-empty";
-import { SectionTitle } from "@/components/ui/section-title";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel, PanelGrid } from "@/components/ui/panel";
 import { experiences } from "@/lib/data";
 
 export const metadata = {
@@ -21,15 +22,21 @@ export default function ExperiencePage() {
   }));
 
   return (
-    <section className="section-padding">
-      <div className="max-width-content mx-auto section-padding-x">
-        <SectionTitle
-          as="h1"
+    <div className="max-width-content mx-auto section-padding-x section-padding">
+      <PanelGrid>
+        <PageHeader
+          path="experience"
           title="Experience"
           subtitle="My professional journey in software engineering."
         />
-        <Timeline items={timelineItems} emptyState={<ExperienceEmpty />} />
-      </div>
-    </section>
+        <Panel
+          title="Timeline"
+          meta={`${timelineItems.length} entries`}
+          className="max-w-3xl"
+        >
+          <Timeline items={timelineItems} emptyState={<ExperienceEmpty />} />
+        </Panel>
+      </PanelGrid>
+    </div>
   );
 }

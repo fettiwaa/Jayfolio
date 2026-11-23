@@ -1,9 +1,8 @@
 "use client";
 
-import { Fragment } from "react";
-import { motion } from "framer-motion";
-import { staggerFade, fadeInUp } from "@/lib/animations";
-import { SectionTitle } from "@/components/ui/section-title";
+import { Panel } from "@/components/ui/panel";
+import { educationData } from "@/lib/data";
+import { site } from "@/lib/constants";
 
 const focusAreas = [
   "Full Stack Development",
@@ -12,58 +11,65 @@ const focusAreas = [
   "UI/UX",
 ];
 
-interface AboutSectionProps {
-  /** True on the /about page, where the title is the page's main heading. */
-  isPage?: boolean;
+// Facts drawn only from existing data (education entry and site settings).
+const currentStudy = educationData[0];
+const facts = currentStudy
+  ? [
+      { label: "Study", value: "BS Computer Science" },
+      { label: "School", value: currentStudy.school },
+      { label: "Years", value: currentStudy.period },
+      { label: "Role", value: site.title },
+    ]
+  : [{ label: "Role", value: site.title }];
+
+interface AboutPanelProps {
+  id?: string;
+  title?: string;
+  className?: string;
 }
 
-export default function AboutSection({ isPage = false }: AboutSectionProps) {
+/** About panel: short bio, focus areas and key facts. */
+export default function AboutPanel({
+  id = "about",
+  title = "About",
+  className = "",
+}: AboutPanelProps) {
   return (
-    <section
-      id="about"
-      className={isPage ? "section-padding" : "section-padding-sm"}
-    >
-      <div className="max-width-content mx-auto section-padding-x">
-        <SectionTitle
-          as={isPage ? "h1" : "h2"}
-          title="About"
-          subtitle="I build clean, scalable software that solves real-world problems."
-        />
+    <Panel id={id} title={title} meta="whoami" className={className}>
+      <p className="text-lead text-(--theme-text-secondary)">
+        BS Computer Science student at Batangas State University. Building
+        software that solves real-world problems.
+      </p>
 
-        <motion.div
-          variants={staggerFade}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="text-center"
-        >
-          <motion.p
-            variants={fadeInUp}
-            className="text-lead max-w-2xl mx-auto mb-8 text-(--theme-text-secondary)"
+      <ul aria-label="Focus areas" className="mt-4 flex flex-wrap gap-1.5">
+        {focusAreas.map((area) => (
+          <li
+            key={area}
+            className="px-2.5 py-1 rounded-(--badge-radius) border border-(--theme-border) text-xs font-mono text-(--theme-text-secondary)"
           >
-            BS Computer Science student at Batangas State University. Building
-            software that solves real-world problems.
-          </motion.p>
+            {area}
+          </li>
+        ))}
+      </ul>
 
-          {/* Wraps as one line of text; separators are decorative. */}
-          <motion.ul
-            variants={fadeInUp}
-            aria-label="Focus areas"
-            className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-sm text-(--theme-text-secondary)"
+      <dl className="mt-5 grid grid-cols-2 gap-px overflow-hidden rounded-[calc(var(--panel-radius)-2px)] border border-(--theme-border) bg-(--theme-border)">
+        {facts.map((fact) => (
+          <div
+            key={fact.label}
+            className="px-3.5 py-2.5 bg-(--theme-surface-elevated) min-w-0"
           >
-            {focusAreas.map((area, i) => (
-              <Fragment key={area}>
-                {i > 0 && (
-                  <li aria-hidden="true" className="text-(--theme-text-muted)">
-                    ·
-                  </li>
-                )}
-                <li>{area}</li>
-              </Fragment>
-            ))}
-          </motion.ul>
-        </motion.div>
-      </div>
-    </section>
+            <dt className="text-label text-(--theme-text-muted)">
+              {fact.label}
+            </dt>
+            <dd
+              className="mt-0.5 text-sm text-(--theme-text) truncate"
+              title={fact.value}
+            >
+              {fact.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </Panel>
   );
 }
