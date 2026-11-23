@@ -10,7 +10,7 @@ export const projects: Project[] = [
     year: "2026",
     status: "Ongoing",
     role: "Designer & Developer",
-    thumbnail: "/images/projects/jayfolio-v3.svg",
+    thumbnail: "/images/projects/jayfolio-v3.png",
     github: "https://github.com/fettiwaa/Jayfolio",
     demo: "https://jayfolio-fty.vercel.app",
     featured: true,
