@@ -64,3 +64,23 @@
 - **Fix:** Add additional profile images to `public/images/`.
 - **Priority:** Medium
 - **Date:** 2026-08-03
+
+## 2026-11-23 Security / Cleanup Pass
+
+### `postcss` override for Next 15
+- `package.json` `overrides.next.postcss = "$postcss"` forces Next 15's bundled postcss (8.4.31, vulnerable) to the project's patched 8.5.x. `npm audit` reports 0 vulnerabilities.
+- **Remove the override when upgrading to Next 16**, which ships a patched postcss itself.
+- **Priority:** Low
+
+### `next lint` is deprecated
+- Removed in Next 16. Migrate with `npx @next/codemod@canary next-lint-to-eslint-cli .` before upgrading.
+- **Priority:** Low
+
+### Resolved this pass
+- Removed `images.remotePatterns` `hostname: '**'` wildcard (no remote images used).
+- Contact form never submitted (button was `type="button"`) and its server action only logged; replaced with a mailto call-to-action and removed `app/actions.ts`.
+- Chat bot no longer mentions PawsitiveCare (no project page exists).
+- `og-image.png` was missing: removed from `robots.txt`; metadata now uses the `/og` route.
+- `tsconfig.tsbuildinfo` untracked and git-ignored.
+- Upgraded `next` 15.5.22 → 15.5.29 (Image Optimization RCE and other critical advisories).
+- Removed unused `@vercel/og` (`/og` uses `next/og`), which cleared the `satori` advisory; `sharp` updated to 0.35.5.
