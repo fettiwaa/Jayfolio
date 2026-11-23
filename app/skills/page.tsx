@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function SkillsPage() {
-  return <SkillsSection />;
+  return <SkillsSection isPage />;
 }

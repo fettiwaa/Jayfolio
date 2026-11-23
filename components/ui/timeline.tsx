@@ -1,7 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "@/components/theme-provider";
 import { Badge } from "@/components/ui/badge";
 
 interface TimelineItem {
@@ -15,103 +15,77 @@ interface TimelineItem {
 
 interface TimelineProps {
   items: TimelineItem[];
+  /** Shown instead of the timeline when there are no items. */
+  emptyState?: ReactNode;
 }
 
-export function Timeline({ items }: TimelineProps) {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
-  const lineColor = isDark
-    ? "rgba(209, 213, 219, 0.2)"
-    : "rgba(107, 114, 128, 0.15)";
-  const dotColor = isDark ? "#d1d5db" : "#6b7280";
-  const textColor = isDark ? "#f0f0f0" : "#1a1a1a";
-  const secondaryColor = isDark ? "#8b93a7" : "#6b7280";
-  const mutedColor = isDark ? "#6b7280" : "#9ca3af";
-  const borderColor = isDark
-    ? "rgba(42, 47, 54, 0.5)"
-    : "rgba(224, 224, 220, 0.5)";
-
+export function Timeline({ items, emptyState }: TimelineProps) {
   if (items.length === 0) {
     return (
-      <p className="text-center text-sm" style={{ color: secondaryColor }}>
-        Nothing to show here yet. Check back soon.
-      </p>
+      <div className="text-sm text-(--theme-text-secondary)">
+        {emptyState ?? <p>Nothing to show here yet. Check back soon.</p>}
+      </div>
     );
   }
 
   return (
-    <div className="relative">
-      <motion.div
-        className="absolute left-0 md:left-1/2 top-0 bottom-0 w-px"
-        style={{ backgroundColor: lineColor }}
-        initial={{ scaleY: 0, transformOrigin: "top" }}
-        whileInView={{ scaleY: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-      />
+    // One line on the left at every width; each dot is centred on it.
+    <ol className="relative border-l border-(--theme-border) ml-1.5">
       {items.map((item, index) => (
-        <motion.div
-          key={item.title + index}
-          className="relative mb-16 md:mb-24 last:mb-0"
-          initial={{ opacity: 0, y: 30 }}
+        <motion.li
+          key={item.title + item.period}
+          className="relative pl-8 md:pl-10 pb-12 last:pb-0"
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: index * 0.15 }}
+          transition={{ duration: 0.45, delay: index * 0.1, ease: "easeOut" }}
         >
-          <motion.div
-            className="absolute top-0 w-3 h-3 rounded-full"
-            style={{ left: "calc(-6px + 1px)", backgroundColor: dotColor }}
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.3 + index * 0.15 }}
+          <span
+            aria-hidden="true"
+            className="absolute left-0 top-1.5 w-3 h-3 -translate-x-1/2 rounded-full bg-(--theme-text-muted) ring-4 ring-(--theme-bg)"
           />
-          <div className="md:ml-auto md:w-1/2 md:pl-8">
-            <div className="md:text-right">
-              <time className="text-sm font-mono" style={{ color: mutedColor }}>
-                {item.period}
-              </time>
-              <h3
-                className="text-xl font-semibold mt-1"
-                style={{ color: textColor }}
-              >
-                {item.title}
-              </h3>
-              {item.subtitle && (
-                <p className="text-base mt-1" style={{ color: secondaryColor }}>
-                  {item.subtitle}
-                </p>
-              )}
-              {item.location && (
-                <p className="text-sm mt-0.5" style={{ color: mutedColor }}>
-                  {item.location}
-                </p>
-              )}
-              {item.tags && item.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 justify-end mt-3">
-                  {item.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-              <div className="mt-4 space-y-1.5 text-left md:text-right">
-                {item.details.map((detail, i) => (
-                  <p
-                    key={i}
-                    className="text-sm leading-relaxed"
-                    style={{ color: secondaryColor }}
-                  >
-                    {detail.content}
-                  </p>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          <time className="text-label text-(--theme-text-muted)">
+            {item.period}
+          </time>
+          <h3 className="text-subsection text-(--theme-text) mt-2">
+            {item.title}
+          </h3>
+          {item.subtitle && (
+            <p className="text-base mt-1 text-(--theme-text-secondary)">
+              {item.subtitle}
+            </p>
+          )}
+          {item.location && (
+            <p className="text-sm mt-0.5 text-(--theme-text-muted)">
+              {item.location}
+            </p>
+          )}
+          {item.tags && item.tags.length > 0 && (
+            <ul
+              className="flex flex-wrap gap-1.5 mt-3"
+              aria-label="Technologies"
+            >
+              {item.tags.map((tag) => (
+                <li key={tag}>
+                  <Badge variant="outline">{tag}</Badge>
+                </li>
+              ))}
+            </ul>
+          )}
+          {item.details.length > 0 && (
+            <ul className="mt-4 space-y-1.5 max-w-2xl">
+              {item.details.map((detail) => (
+                <li
+                  key={detail.content}
+                  className="text-sm leading-relaxed text-(--theme-text-secondary)"
+                >
+                  {detail.content}
+                </li>
+              ))}
+            </ul>
+          )}
+        </motion.li>
       ))}
-    </div>
+    </ol>
   );
 }

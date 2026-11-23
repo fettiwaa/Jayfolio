@@ -1,8 +1,8 @@
-import ProjectGrid from '@/components/project/project-grid';
-import { SectionTitle } from '@/components/ui/section-title';
+import ProjectGrid from "@/components/project/project-grid";
+import { SectionTitle } from "@/components/ui/section-title";
 
 export const metadata = {
-  title: 'Projects',
+  title: "Projects",
 };
 
 export default function ProjectsPage() {
@@ -10,8 +10,9 @@ export default function ProjectsPage() {
     <section className="section-padding">
       <div className="max-width-content mx-auto section-padding-x">
         <SectionTitle
+          as="h1"
           title="Selected Work"
-          subtitle="A collection of projects I've built, ranging from full-stack web applications to console-based systems."
+          subtitle="Things I've designed and built, from this portfolio to tooling for AI coding agents."
         />
         <ProjectGrid />
       </div>

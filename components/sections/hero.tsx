@@ -1,46 +1,46 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import Link from "next/link";
-import { useTheme } from "@/components/theme-provider";
-import { site } from "@/lib/constants";
-import { fadeInUpDelay, staggerContainerHero } from "@/lib/animations";
 import { useState, useEffect, useCallback } from "react";
+import { site } from "@/lib/constants";
+import { projects, skillCategories } from "@/lib/data";
+import { staggerContainerHero } from "@/lib/animations";
+import { Button } from "@/components/ui/button";
 
-const item = fadeInUpDelay;
-const container = staggerContainerHero;
+// Only list photos that exist in public/images. With one photo the carousel is off;
+// add files here (e.g. "/images/profile-2.jpg") to turn it back on.
+const profileImages = ["/images/profile.jpg"];
+const hasCarousel = profileImages.length > 1;
 
-const profileImages = [
-  "/images/profile.jpg",
-  "/images/profile-2.jpg",
-  "/images/profile-3.jpg",
-];
+// Counted from lib/data.ts so the stats stay accurate as content changes.
+const formatCount = (count: number) => String(count).padStart(2, "0");
+// Unique, because some skills (e.g. PostgreSQL) appear in more than one category.
+const techCount = new Set(skillCategories.flatMap((category) => category.items))
+  .size;
 
 const playerStats = [
-  { label: "LEVEL", value: "03" },
-  { label: "ROLE", value: "FULL STACK" },
+  { label: "Level", value: "03" },
+  { label: "Role", value: "Full Stack" },
   { label: "XP", value: "80%" },
-  { label: "PROJECTS", value: "02" },
-  { label: "TECH", value: "18+" },
-  { label: "COFFEE", value: "∞" },
+  { label: "Projects", value: formatCount(projects.length) },
+  { label: "Tech", value: formatCount(techCount) },
+  { label: "Coffee", value: "∞" },
 ];
 
 const heroItem: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.5, ease: "easeOut" },
   },
 };
 
 export default function HeroSection() {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-
   const [imgIndex, setImgIndex] = useState(0);
 
   useEffect(() => {
+    if (!hasCarousel) return;
     const timer = setInterval(() => {
       setImgIndex((prev) => (prev + 1) % profileImages.length);
     }, 5000);
@@ -51,106 +51,96 @@ export default function HeroSection() {
     setImgIndex((prev) => (prev + 1) % profileImages.length);
   }, []);
 
+  const photo = (
+    <motion.div
+      key={imgIndex}
+      initial={hasCarousel ? { opacity: 0 } : false}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+      className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-(--card-radius) overflow-hidden border border-(--theme-border)"
+    >
+      <img
+        src={profileImages[imgIndex]}
+        alt="Portrait of Jaycee Andal"
+        className="w-full h-full object-cover grayscale opacity-90 transition duration-500 group-hover:grayscale-0 group-hover:opacity-100"
+        loading="eager"
+      />
+    </motion.div>
+  );
+
   return (
     <section id="hero" className="min-h-[75vh] flex items-center py-12">
       <div className="max-width-content mx-auto section-padding-x w-full">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center"
-        >
-          <motion.div className="text-left" variants={heroItem}>
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <motion.div
+            variants={staggerContainerHero}
+            initial="hidden"
+            animate="visible"
+          >
             <motion.p
               variants={heroItem}
-              className="text-sm font-mono tracking-wider uppercase mb-6"
-              style={{ color: "var(--theme-text-muted)" }}
+              className="text-label text-(--theme-text-muted) mb-6"
             >
               {site.title}
             </motion.p>
 
             <motion.h1
               variants={heroItem}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6"
-              style={{ color: "var(--theme-text)" }}
+              className="text-display text-(--theme-text) mb-6"
             >
-              Jaycee Andal
+              {site.name}
             </motion.h1>
 
             <motion.p
               variants={heroItem}
-              className="text-lg md:text-xl leading-relaxed max-w-md mb-8"
-              style={{ color: "var(--theme-text-secondary)" }}
+              className="text-lead max-w-md mb-8 text-(--theme-text-secondary)"
             >
               {site.description}
             </motion.p>
 
-            <motion.div
-              variants={heroItem}
-              className="flex flex-wrap gap-4 mb-12"
-            >
-              <Link href="/projects">
-                <motion.button
-                  whileHover={{ scale: 1.02, y: -1 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-6 py-3 text-sm font-medium bg-[var(--theme-accent)] text-[var(--theme-bg)] rounded-[var(--btn-radius)] transition-all hover:shadow-lg"
-                >
-                  View Projects
-                </motion.button>
-              </Link>
+            <motion.div variants={heroItem} className="mb-12">
+              <Button href="/projects" variant="primary" size="md">
+                View Projects
+              </Button>
             </motion.div>
 
-            <motion.div
+            <motion.dl
               variants={heroItem}
-              className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-mono"
-              style={{ color: "var(--theme-text-muted)" }}
+              className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-5 max-w-sm"
             >
               {playerStats.map((stat) => (
-                <div key={stat.label} className="flex flex-col">
-                  <span style={{ color: "var(--theme-text-muted)" }}>
+                <div key={stat.label}>
+                  <dt className="text-label text-(--theme-text-muted)">
                     {stat.label}
-                  </span>
-                  <span
-                    className="font-semibold"
-                    style={{ color: "var(--theme-text)" }}
-                  >
+                  </dt>
+                  <dd className="mt-1 font-mono text-sm font-semibold uppercase text-(--theme-text)">
                     {stat.value}
-                  </span>
+                  </dd>
                 </div>
               ))}
-            </motion.div>
+            </motion.dl>
           </motion.div>
 
           <motion.div
             variants={heroItem}
+            initial="hidden"
+            animate="visible"
             className="flex justify-center lg:justify-end"
           >
-            <motion.button
-              onClick={nextImage}
-              className="relative group cursor-pointer"
-              whileHover={{ scale: 1.02 }}
-            >
-              <motion.div
-                key={imgIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-[var(--card-radius)] overflow-hidden"
-                style={{
-                  border: "1px solid var(--theme-border)",
-                }}
+            {hasCarousel ? (
+              <button
+                type="button"
+                onClick={nextImage}
+                className="group rounded-(--card-radius)"
+                aria-label="Show next photo"
               >
-                <img
-                  src={profileImages[imgIndex]}
-                  alt={`Jaycee Andal — ${imgIndex + 1}`}
-                  className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
-                  loading="eager"
-                />
-              </motion.div>
-            </motion.button>
+                {photo}
+              </button>
+            ) : (
+              <div className="group">{photo}</div>
+            )}
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

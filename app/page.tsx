@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/sections/hero";
@@ -8,11 +7,15 @@ import AboutSection from "@/components/sections/about";
 import SkillsSection from "@/components/sections/skills";
 import ProjectGrid from "@/components/project/project-grid";
 import { Timeline } from "@/components/ui/timeline";
+import { ExperienceEmpty } from "@/components/ui/experience-empty";
 import { SectionTitle } from "@/components/ui/section-title";
 import { Button } from "@/components/ui/button";
-import { experiences } from "@/lib/data";
-import { educationData } from "@/lib/data";
-import { fadeInUp, staggerContainer } from "@/lib/animations";
+import { experiences, educationData } from "@/lib/data";
+import { site } from "@/lib/constants";
+import { fadeInUp } from "@/lib/animations";
+
+const linkClasses =
+  "text-(--theme-text-secondary) underline-offset-4 transition-colors hover:text-(--theme-text) hover:underline";
 
 export default function Home() {
   const experienceItems = experiences.map((exp) => ({
@@ -47,57 +50,50 @@ export default function Home() {
 
       <AboutSection />
 
-      <section className="section-padding">
+      {/* Section ids match the nav links so the nav can highlight the current section. */}
+      <section id="projects" className="section-padding">
         <div className="max-width-content mx-auto section-padding-x">
           <SectionTitle
             title="Selected Work"
-            subtitle="A collection of projects I've built, ranging from full-stack web applications to console-based systems."
+            subtitle="Things I've designed and built, from this portfolio to tooling for AI coding agents."
           />
           <ProjectGrid featuredOnly limit={4} />
-          <motion.div
-            className="text-center mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <Link href="/projects">
-              <Button variant="secondary" size="md">
-                View All Projects
-                <ArrowUpRight size={16} />
-              </Button>
-            </Link>
-          </motion.div>
+          <div className="mt-10">
+            <Button
+              href="/projects"
+              variant="secondary"
+              icon={<ArrowUpRight size={16} />}
+            >
+              View All Projects
+            </Button>
+          </div>
         </div>
       </section>
 
-      <section id="experience" className="section-padding">
+      <section id="experience" className="section-padding-sm">
         <div className="max-width-content mx-auto section-padding-x">
           <SectionTitle
             title="Experience"
             subtitle="My professional journey in software engineering."
           />
-          <Timeline items={experienceItems} />
-          <motion.div
-            className="text-center mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <Link href="/experience">
-              <Button variant="secondary" size="md">
+          <Timeline items={experienceItems} emptyState={<ExperienceEmpty />} />
+          {experienceItems.length > 0 && (
+            <div className="mt-10">
+              <Button
+                href="/experience"
+                variant="secondary"
+                icon={<ArrowUpRight size={16} />}
+              >
                 View Full Experience
-                <ArrowUpRight size={16} />
               </Button>
-            </Link>
-          </motion.div>
+            </div>
+          )}
         </div>
       </section>
 
       <SkillsSection />
 
-      <section id="education" className="section-padding">
+      <section id="education" className="section-padding-sm">
         <div className="max-width-content mx-auto section-padding-x">
           <SectionTitle
             title="Education"
@@ -107,76 +103,56 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="section-padding">
+      <section
+        id="contact"
+        className="section-padding border-t border-(--theme-border) mt-12 md:mt-16"
+      >
         <div className="max-width-content mx-auto section-padding-x">
           <motion.div
             className="text-center max-w-2xl mx-auto"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.15, delayChildren: 0.2 },
-              },
-            }}
+            viewport={{ once: true, amount: 0.2 }}
+            variants={fadeInUp}
           >
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold tracking-tight mb-4"
-              style={{ color: "var(--theme-text)" }}
-              variants={fadeInUp}
-            >
+            <h2 className="text-section text-(--theme-text) mb-4">
               Let&apos;s Build Something Together
-            </motion.h2>
-            <motion.p
-              className="text-lg leading-relaxed mb-8"
-              style={{ color: "var(--theme-text-secondary)" }}
-              variants={fadeInUp}
-            >
+            </h2>
+            <p className="text-lead mb-8 text-(--theme-text-secondary)">
               I&apos;m always open to discussing new projects, creative ideas,
               or opportunities to be part of your vision.
-            </motion.p>
-            <motion.div variants={fadeInUp}>
-              <Link href="/contact">
-                <Button variant="primary" size="lg">
-                  Get in Touch
-                </Button>
-              </Link>
-            </motion.div>
+            </p>
+            <Button href="/contact" variant="primary" size="lg">
+              Get in Touch
+            </Button>
 
-            <motion.div
-              className="mt-8 flex flex-wrap justify-center gap-6 text-sm"
-              variants={fadeInUp}
-            >
-              <a
-                href="mailto:jayceeja12@gmail.com"
-                className="hover:text-[var(--theme-accent)] transition-colors"
-                style={{ color: "var(--theme-text-secondary)" }}
-              >
-                jayceeja12@gmail.com
-              </a>
-              <span style={{ color: "var(--theme-border)" }}>|</span>
-              <a
-                href="https://github.com/fettiwaa"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[var(--theme-accent)] transition-colors"
-                style={{ color: "var(--theme-text-secondary)" }}
-              >
-                GitHub
-              </a>
-              <span style={{ color: "var(--theme-border)" }}>|</span>
-              <a
-                href="https://linkedin.com/in/jaycee-andal"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[var(--theme-accent)] transition-colors"
-                style={{ color: "var(--theme-text-secondary)" }}
-              >
-                LinkedIn
-              </a>
-            </motion.div>
+            <ul className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+              <li>
+                <a href={`mailto:${site.email}`} className={linkClasses}>
+                  {site.email}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={site.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClasses}
+                >
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a
+                  href={site.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClasses}
+                >
+                  LinkedIn
+                </a>
+              </li>
+            </ul>
           </motion.div>
         </div>
       </section>

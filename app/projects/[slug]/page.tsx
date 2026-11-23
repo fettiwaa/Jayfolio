@@ -5,8 +5,10 @@ import fs from "fs";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { AnimatedPill } from "@/components/ui/animated-pill";
+import { Button } from "@/components/ui/button";
+import { ProjectStatus } from "@/components/ui/project-status";
 import { projects } from "@/lib/data";
 
 const projectsDir = path.join(process.cwd(), "content", "projects");
@@ -74,120 +76,119 @@ export default async function ProjectCaseStudyPage({
       <div className="max-width-content mx-auto section-padding-x">
         <Link
           href="/projects"
-          className="inline-flex items-center gap-1 text-sm mb-8 transition-colors"
-          style={{ color: "var(--theme-text-secondary)" }}
+          className="inline-flex items-center gap-1.5 text-sm mb-10 text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={16} aria-hidden="true" />
           Back to Projects
         </Link>
 
-        <header className="mb-12">
-          <h1
-            className="text-4xl md:text-5xl font-bold tracking-tight mb-4"
-            style={{ color: "var(--theme-text)" }}
-          >
+        <header className="mb-12 pb-10 border-b border-(--theme-border)">
+          <h1 className="text-display text-(--theme-text) mb-5">
             {project.title}
           </h1>
-          <p
-            className="text-lg md:text-xl max-w-2xl"
-            style={{ color: "var(--theme-text-secondary)" }}
-          >
+          <p className="text-lead max-w-2xl text-(--theme-text-secondary)">
             {project.description}
           </p>
+
+          <dl className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-4 max-w-xl">
+            <div>
+              <dt className="text-label text-(--theme-text-muted)">Year</dt>
+              <dd className="mt-1 text-sm text-(--theme-text)">
+                {project.year}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-label text-(--theme-text-muted)">Status</dt>
+              <dd className="mt-1 text-sm text-(--theme-text)">
+                <ProjectStatus status={project.status} />
+              </dd>
+            </div>
+            <div>
+              <dt className="text-label text-(--theme-text-muted)">Role</dt>
+              <dd className="mt-1 text-sm text-(--theme-text)">
+                {project.role}
+              </dd>
+            </div>
+          </dl>
+
+          <ul
+            className="mt-6 flex flex-wrap gap-2"
+            aria-label="Technologies used"
+          >
+            {project.tech.map((t, i) => (
+              <li key={t}>
+                <AnimatedPill label={t} delay={i * 0.04} />
+              </li>
+            ))}
+          </ul>
         </header>
 
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.tech.map((t, i) => (
-              <AnimatedPill key={t} label={t} delay={i * 0.05} color="blue" />
-            ))}
-          </div>
-
-          <div
-            className="flex flex-wrap gap-4 text-sm"
-            style={{ color: "var(--theme-text-muted)" }}
-          >
-            <span className="font-mono">
-              {project.year} ·{" "}
-              <span
-                style={{
-                  color: project.status === "Completed" ? "#4ade80" : "#fbbf24",
-                }}
-              >
-                {project.status}
-              </span>
-            </span>
-            <span className="font-mono">{project.role}</span>
-          </div>
-        </div>
-
-        <div
-          className="prose prose-gray max-w-none"
-          style={{ color: "var(--theme-text-secondary)" }}
-        >
+        <div className="case-study">
           <MDXRemote source={source} options={mdxOptions} />
         </div>
 
-        <footer
-          className="mt-16 pt-8 border-t flex flex-wrap gap-6"
-          style={{ borderColor: "var(--theme-border)" }}
-        >
-          {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: "var(--theme-text-secondary)" }}
-            >
-              GitHub Repository
-            </a>
-          )}
-          {project.demo && (
-            <a
-              href={project.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: "var(--theme-text-secondary)" }}
-            >
-              Live Demo
-            </a>
-          )}
-        </footer>
+        {(project.github || project.demo) && (
+          <div className="mt-14 flex flex-wrap gap-3">
+            {project.github && (
+              <Button
+                href={project.github}
+                variant="secondary"
+                icon={<ArrowUpRight size={16} />}
+              >
+                GitHub Repository
+              </Button>
+            )}
+            {project.demo && (
+              <Button
+                href={project.demo}
+                variant="secondary"
+                icon={<ArrowUpRight size={16} />}
+              >
+                Live Demo
+              </Button>
+            )}
+          </div>
+        )}
 
-        <div
-          className="mt-12 pt-8 border-t flex justify-between items-center"
-          style={{ borderColor: "var(--theme-border)" }}
+        <nav
+          aria-label="More projects"
+          className="mt-14 pt-8 border-t border-(--theme-border) grid grid-cols-3 items-center gap-4 text-sm"
         >
-          {prev && (
-            <Link
-              href={`/projects/${prev.slug}`}
-              className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: "var(--theme-text-secondary)" }}
-            >
-              <ArrowLeft size={16} />
-              Previous: {prev.title}
-            </Link>
-          )}
+          <div>
+            {prev && (
+              <Link
+                href={`/projects/${prev.slug}`}
+                className="inline-flex items-center gap-2 text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+              >
+                <ArrowLeft size={16} aria-hidden="true" />
+                <span>
+                  <span className="sr-only">Previous project: </span>
+                  {prev.title}
+                </span>
+              </Link>
+            )}
+          </div>
           <Link
             href="/projects"
-            className="text-sm transition-colors"
-            style={{ color: "var(--theme-text-secondary)" }}
+            className="justify-self-center text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
           >
             All Projects
           </Link>
-          {next && (
-            <Link
-              href={`/projects/${next.slug}`}
-              className="inline-flex items-center gap-2 text-sm transition-colors"
-              style={{ color: "var(--theme-text-secondary)" }}
-            >
-              Next: {next.title}
-              <ArrowRight size={16} />
-            </Link>
-          )}
-        </div>
+          <div className="justify-self-end">
+            {next && (
+              <Link
+                href={`/projects/${next.slug}`}
+                className="inline-flex items-center gap-2 text-right text-(--theme-text-secondary) transition-colors hover:text-(--theme-text)"
+              >
+                <span>
+                  <span className="sr-only">Next project: </span>
+                  {next.title}
+                </span>
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            )}
+          </div>
+        </nav>
       </div>
     </article>
   );

@@ -1,9 +1,10 @@
-import { Timeline } from '@/components/ui/timeline';
-import { SectionTitle } from '@/components/ui/section-title';
-import { experiences } from '@/lib/data';
+import { Timeline } from "@/components/ui/timeline";
+import { ExperienceEmpty } from "@/components/ui/experience-empty";
+import { SectionTitle } from "@/components/ui/section-title";
+import { experiences } from "@/lib/data";
 
 export const metadata = {
-  title: 'Experience',
+  title: "Experience",
 };
 
 export default function ExperiencePage() {
@@ -12,18 +13,22 @@ export default function ExperiencePage() {
     title: exp.title,
     subtitle: exp.company,
     location: exp.location,
-    tags: ['Laravel', 'PHP', 'Git'],
-    details: exp.responsibilities.map((r) => ({ type: 'text' as const, content: r })),
+    tags: ["Laravel", "PHP", "Git"],
+    details: exp.responsibilities.map((r) => ({
+      type: "text" as const,
+      content: r,
+    })),
   }));
 
   return (
     <section className="section-padding">
       <div className="max-width-content mx-auto section-padding-x">
         <SectionTitle
+          as="h1"
           title="Experience"
           subtitle="My professional journey in software engineering."
         />
-        <Timeline items={timelineItems} />
+        <Timeline items={timelineItems} emptyState={<ExperienceEmpty />} />
       </div>
     </section>
   );

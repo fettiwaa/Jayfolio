@@ -1,63 +1,29 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useTheme } from '@/components/theme-provider';
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
+// Rendered inside the root layout's <main>, so this uses a plain wrapper, not another <main>.
 export default function NotFound() {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
-
   return (
-    <main id="main" className="pt-16">
-      <div className="min-h-screen flex flex-col items-center justify-center px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <motion.h1
-            className="text-7xl font-bold mb-4"
-            style={{ color: 'var(--theme-text)' }}
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            404
-          </motion.h1>
-          <motion.h2
-            className="text-2xl font-medium mb-2"
-            style={{ color: 'var(--theme-text)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            Page not found
-          </motion.h2>
-          <motion.p
-            className="mb-8 max-w-md"
-            style={{ color: 'var(--theme-text-secondary)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            The page you&apos;re looking for doesn&apos;t exist or has been moved.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <Link
-              href="/"
-              className="inline-flex items-center px-6 py-3 text-sm font-medium bg-[var(--theme-accent)] text-[var(--theme-bg)] rounded-[var(--btn-radius)] transition-all hover:scale-105 hover:shadow-lg"
-            >
-              Back to Home
-            </Link>
-          </motion.div>
-        </motion.div>
-      </div>
-    </main>
+    <div className="min-h-[70vh] flex flex-col items-center justify-center px-6 py-24">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="text-center"
+      >
+        <p className="text-label text-(--theme-text-muted) mb-4">Error 404</p>
+        <h1 className="text-page-title text-(--theme-text) mb-3">
+          Page not found
+        </h1>
+        <p className="mb-8 max-w-md text-(--theme-text-secondary)">
+          The page you&apos;re looking for doesn&apos;t exist or has been moved.
+        </p>
+        <Button href="/" variant="primary">
+          Back to Home
+        </Button>
+      </motion.div>
+    </div>
   );
 }
