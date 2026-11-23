@@ -4,16 +4,16 @@ Brief: `JAYFOLIO-PREMIUM-REFINEMENT-ALL-PHASES.md` (provided in chat; not yet sa
 
 | Phase | Status | Date |
 |---|---|---|
-| 0. Baseline, repository safety, setup | Report delivered, awaiting approval | 2026-11-23 |
-| 1. Audit | Not started | |
-| 2. Art direction and plan | Not started | |
-| 3. Foundation and shared components | Not started | |
-| 4. Homepage and hero | Not started | |
-| 5. Projects and case studies | Not started | |
-| 6. Supporting pages | Not started | |
-| 7. Navigation, chatbot, motion | Not started | |
-| 8. Responsive, accessibility, visual QA | Not started | |
-| 9. Validation and final report | Not started | |
+| 0. Baseline, repository safety, setup | Done (earlier work committed; remote now `fettiwaa/Jayfolio`; no browser tool, so visual claims are labelled) | 2026-11-23 |
+| 1. Audit | Done: [2026-11-23-phase-1-audit.md](2026-11-23-phase-1-audit.md). Owner: keep Experience; accuracy list corrected (hero stats counted from data, two subtitles reworded) | 2026-11-23 |
+| 2. Art direction and plan | Approved with recommended picks (D1–D5): [2026-11-23-phase-2-plan.md](2026-11-23-phase-2-plan.md) | 2026-11-23 |
+| 3. Foundation and shared components | Done | 2026-11-23 |
+| 4. Homepage and hero | Done (4.7 deferred) | 2026-11-23 |
+| 5. Projects and case studies | Done | 2026-11-23 |
+| 6. Supporting pages | Done | 2026-11-23 |
+| 7. Navigation, chatbot, motion | Done | 2026-11-23 |
+| 8. Responsive, accessibility, visual QA | Code/HTML checks done; **rendered visual QA pending owner** | 2026-11-23 |
+| 9. Validation and final report | Done: [2026-11-23-phases-3-9-report.md](2026-11-23-phases-3-9-report.md). Uncommitted | 2026-11-23 |
 
 ---
 
