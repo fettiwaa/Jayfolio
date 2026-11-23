@@ -158,7 +158,7 @@ export default function Home() {
               </a>
               <span style={{ color: "var(--theme-border)" }}>|</span>
               <a
-                href="https://github.com/Andaljc1218"
+                href="https://github.com/fettiwaa"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[var(--theme-accent)] transition-colors"

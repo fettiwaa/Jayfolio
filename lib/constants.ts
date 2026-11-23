@@ -4,7 +4,7 @@ export const site = {
   description:
     "Building clean, scalable software that solves real-world problems.",
   email: "jayceeja12@gmail.com",
-  github: "https://github.com/Andaljc1218",
+  github: "https://github.com/fettiwaa",
   linkedin: "https://linkedin.com/in/jaycee-andal",
   resume: "/resume.pdf",
 };
@@ -32,7 +32,7 @@ export const chatKnowledge = {
   projects: {
     title: "Projects",
     content:
-      "My projects include FoundIT (a job matching platform for students built with Next.js and PostgreSQL), JayFolio V3 (this portfolio, built with Next.js and Framer Motion), EcoMap (an environmental waste management system built with PHP and MySQL), and FLASH-Q (a Java flashcard quiz system).",
+      "My projects include JayFolio V3 (this portfolio, built with Next.js, TypeScript, Tailwind CSS, and Framer Motion) and the AI Engineering Kit (a vendor-neutral engineering rulebook for AI coding agents like Claude Code, Codex, and Cursor, adopted into any project with one PowerShell command).",
   },
   experience: {
     title: "Experience",
@@ -52,11 +52,11 @@ export const chatKnowledge = {
   resume: {
     title: "Resume",
     content:
-      "My resume is being updated and isn't available to download right now. You can still explore my Computer Science education at Batangas State University, and my project portfolio including FoundIT, JayFolio, EcoMap, and FLASH-Q.",
+      "My resume is being updated and isn't available to download right now. You can still explore my Computer Science education at Batangas State University, and my projects, JayFolio and the AI Engineering Kit.",
   },
   contact: {
     title: "Contact",
     content:
-      "You can reach me at jayceeja12@gmail.com. I am also on GitHub at github.com/Andaljc1218 and LinkedIn at linkedin.com/in/jaycee-andal. Feel free to get in touch!",
+      "You can reach me at jayceeja12@gmail.com. I am also on GitHub at github.com/fettiwaa and LinkedIn at linkedin.com/in/jaycee-andal. Feel free to get in touch!",
   },
 };

@@ -20,7 +20,7 @@ const playerStats = [
   { label: "LEVEL", value: "03" },
   { label: "ROLE", value: "FULL STACK" },
   { label: "XP", value: "80%" },
-  { label: "PROJECTS", value: "12+" },
+  { label: "PROJECTS", value: "02" },
   { label: "TECH", value: "18+" },
   { label: "COFFEE", value: "∞" },
 ];

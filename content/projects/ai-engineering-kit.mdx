@@ -1,0 +1,59 @@
+---
+title: "AI Engineering Kit"
+description: "A modular, vendor-neutral engineering rulebook for AI coding agents, with one command to adopt it in any project."
+tech: ["PowerShell", "Markdown", "AGENTS.md", "Claude Code"]
+year: "2026"
+status: "Ongoing"
+github: "https://github.com/fettiwaa/AI-Engineering-Kit"
+demo: ""
+---
+
+## Overview
+
+AI Engineering Kit codifies the standards, workflows, and guardrails an AI coding agent should follow: security non-negotiables, git and database safety, planning gates, code review, testing, and stack-specific conventions. It is a toolkit, not an application.
+
+It works with Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI, Kilo Code, Windsurf, and Aider, through the cross-tool `AGENTS.md` convention plus a thin shim for tools that need one.
+
+## Problem
+
+AI coding agents follow whatever instructions a project gives them, and every tool reads those instructions from a different file. Without a shared rulebook, each project and each agent ends up with different, incomplete rules about safety, planning, and quality.
+
+## Solution
+
+One rulebook, adopted with one command. Running `adopt-kit.ps1` in a project:
+
+1. Vendors the kit into `.ai-kit/` so every agent can read it without leaving the workspace.
+2. Writes a managed block into the project's `AGENTS.md` with the always-on rules and the chosen framework packs. Anything written outside the block is kept.
+3. Writes shims where a tool needs one (`CLAUDE.md`, `GEMINI.md`, `.github/copilot-instructions.md`, `.aider.conf.yml`).
+
+Re-running it updates the project. This portfolio uses the kit: see `.ai-kit/` and `AGENTS.md` in the Jayfolio repository.
+
+## Key Features
+
+- **Non-Negotiables** — Rules that sit above every layer: never read `.env` files or expose secrets, never auto-run `git commit`, `push`, `rebase`, `reset --hard`, or `clean -fd`, and never run destructive SQL or touch production
+- **Layered precedence** — Global profile, then core rules, then framework packs, then the project's own instructions
+- **Framework packs** — Stack-specific conventions, such as TypeScript, React, Next.js, and Tailwind CSS
+- **20 Claude Code skills** — Generated from the kit's prompts, such as `/investigate-codebase`, `/plan-change`, `/security-audit`, and `/frontend-quality-design`
+- **Checklists and templates** — Before-commit, code review, security, accessibility, and release checklists, plus templates for decision logs, session logs, and specs
+- **Permission rules template** — Claude Code settings that enforce the Non-Negotiables
+
+## How Agents Load It
+
+| Agent | Reads | Shim written |
+|-------|-------|--------------|
+| OpenAI Codex, Cursor, Kilo Code, Windsurf | `AGENTS.md` | none |
+| GitHub Copilot | `.github/copilot-instructions.md`, `AGENTS.md` | `.github/copilot-instructions.md` |
+| Claude Code | `CLAUDE.md` | `CLAUDE.md` containing `@AGENTS.md` |
+| Gemini CLI | `GEMINI.md` | `GEMINI.md` containing `@./AGENTS.md` |
+| Aider | files listed under `read:` | `.aider.conf.yml` |
+
+## Technology Stack
+
+- **Scripts:** PowerShell (`adopt-kit.ps1`, `install-skills.ps1`, `validate-kit.ps1`), running on Windows PowerShell 5.1+ or `pwsh` on macOS/Linux
+- **Content:** Markdown rules, prompts, checklists, and templates
+- **Conventions:** `AGENTS.md` cross-tool standard, Keep a Changelog, Semantic Versioning
+- **License:** MIT
+
+## Links
+
+- [GitHub Repository](https://github.com/fettiwaa/AI-Engineering-Kit)
