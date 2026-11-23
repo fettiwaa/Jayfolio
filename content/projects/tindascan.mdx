@@ -1,0 +1,81 @@
+---
+title: "TindaScan"
+description: "An Android inventory and sales app for sari-sari stores, with barcode checkout, owner and staff roles, and offline selling on Firebase."
+tech: ["Flutter", "Dart", "Firebase", "Riverpod"]
+year: "2026"
+status: "Ongoing"
+github: "https://github.com/fettiwaa/TindaScan"
+demo: ""
+---
+
+## Overview
+
+TindaScan is a mobile inventory and sales system for small sari-sari stores. The cashier scans a product's barcode, builds a cart, takes cash, and the sale and stock update are saved together. The owner sees daily sales, best sellers, and low-stock alerts, and exports reports to Excel.
+
+It is our final project for CS 413 (Advanced Software Engineering) at Batangas State University, built as a team of two with **Cloyd Robin Castillo**. I worked on it as a co-developer.
+
+## Problem
+
+Most sari-sari stores track stock and sales in a notebook, or not at all. Owners find out an item is out of stock when a customer asks for it, cannot tell which products actually make money, and have no record of what a helper sold while they were away. Connectivity in many stores is also unreliable, so a tool that needs constant internet is not usable.
+
+## Solution
+
+An Android-first Flutter app on Firebase, with no custom server:
+
+1. **Scan and sell.** The phone camera reads standard retail barcodes (EAN-13, the format on most Philippine products) and adds the item to the cart.
+2. **Atomic checkout.** Each sale is one Firestore transaction: it re-reads stock and prices, creates the receipt, lowers stock, logs the stock movement, and updates the day's totals. If any item is short, nothing is saved.
+3. **Two roles.** The owner manages products, staff, reports, and settings. Staff can only sell. The app hides screens by role, and Firestore security rules enforce it on the server.
+4. **Offline selling.** Without internet, the sale is saved on the phone and synced later. Offline receipts are marked, and any stock that ends up negative after syncing is flagged to the owner.
+
+## Key Features
+
+- **Barcode checkout** — Continuous scanning, quantity steppers, swipe to remove with undo, and quick-cash buttons for the amount tendered
+- **No double charges** — A sale ID is created with the cart and reused on retry, so a lost connection cannot record the same sale twice
+- **Owner dashboard** — Today's sales, profit estimate, 7- and 30-day trends, best sellers, and lowest stock
+- **Inventory** — Restocks, spoilage, and adjustments with a full movement history, plus low-stock, out-of-stock, and expiry alerts
+- **Reports** — Sales, best sellers, inventory, and stock movements, exported as `.xlsx`
+- **Staff accounts** — The owner creates and deactivates staff; a deactivated account is signed out immediately
+- **English and Filipino**, light and dark themes
+
+## System Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│  Presentation (Flutter)                       │
+│  Sell / Checkout · BarcodeScannerView         │
+│  go_router role guard                         │
+├──────────────────────────────────────────────┤
+│  Business logic (Riverpod)                    │
+│  CartNotifier · CheckoutService · AlertService│
+├──────────────────────────────────────────────┤
+│  Data (repository interfaces)                 │
+│  ProductRepository · SalesRepository · ...    │
+├──────────────────────────────────────────────┤
+│  Backend as a Service (Firebase)              │
+│  Authentication · Cloud Firestore + rules     │
+└──────────────────────────────────────────────┘
+```
+
+Money is stored as whole centavos to avoid rounding errors, and every repository returns typed failures (`InsufficientStock`, `ProductNotFound`, `NetworkUnavailable`, and others) so the screens never handle raw Firebase errors.
+
+## Security
+
+The app's role guard only controls what each user sees. The real enforcement is in Firestore security rules: only active users can write, a sale must belong to the cashier who made it, change must equal tendered minus total, sales cannot be edited or deleted, and stock can only go down as part of a new sale. Dashboard totals must add up to exactly the recorded sales.
+
+## Testing
+
+- **206 automated tests** — Unit, widget, and golden (screenshot) tests, including the full sale flow
+- **33 security-rules tests** — Run against the Firestore emulator, covering owner, staff, deactivated, and signed-out users
+- **CI** — GitHub Actions checks formatting, static analysis, tests, and the security rules on every push
+
+## Technology Stack
+
+- **App:** Flutter 3.41, Dart, Riverpod, go_router
+- **Backend:** Firebase Authentication, Cloud Firestore, App Check
+- **Device:** mobile_scanner (barcode), local notifications, connectivity detection
+- **Reports:** fl_chart, excel, share_plus
+- **Testing:** flutter_test, mocktail, fake_cloud_firestore, @firebase/rules-unit-testing
+
+## Links
+
+- [GitHub Repository](https://github.com/fettiwaa/TindaScan)

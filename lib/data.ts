@@ -31,6 +31,21 @@ export const projects: Project[] = [
     featured: true,
     href: "/projects/ai-engineering-kit",
   },
+  {
+    slug: "tindascan",
+    title: "TindaScan",
+    description:
+      "An Android inventory and sales app for sari-sari stores, with barcode checkout, owner and staff roles, and offline selling on Firebase.",
+    tech: ["Flutter", "Dart", "Firebase", "Riverpod"],
+    year: "2026",
+    status: "Ongoing",
+    role: "Co-developer (with Cloyd Robin Castillo)",
+    thumbnail: "/images/projects/tindascan.png",
+    github: "https://github.com/fettiwaa/TindaScan",
+    demo: "",
+    featured: true,
+    href: "/projects/tindascan",
+  },
 ];
 
 // Experience content is hidden for now. To restore, uncomment the entry below

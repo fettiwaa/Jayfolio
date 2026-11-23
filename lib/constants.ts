@@ -38,7 +38,7 @@ export const chatKnowledge = {
   projects: {
     title: "Projects",
     content:
-      "My projects include JayFolio V3 (this portfolio, built with Next.js, TypeScript, Tailwind CSS, and Framer Motion) and the AI Engineering Kit (a vendor-neutral engineering rulebook for AI coding agents like Claude Code, Codex, and Cursor, adopted into any project with one PowerShell command).",
+      "My projects include JayFolio V3 (this portfolio, built with Next.js, TypeScript, Tailwind CSS, and Framer Motion) and the AI Engineering Kit (a vendor-neutral engineering rulebook for AI coding agents like Claude Code, Codex, and Cursor, adopted into any project with one PowerShell command), and TindaScan (an Android inventory and sales app for sari-sari stores with barcode checkout, built in Flutter and Firebase with my classmate Cloyd Robin Castillo).",
   },
   experience: {
     title: "Experience",
@@ -58,7 +58,7 @@ export const chatKnowledge = {
   resume: {
     title: "Resume",
     content:
-      "My resume is being updated and isn't available to download right now. You can still explore my Computer Science education at Batangas State University, and my projects, JayFolio and the AI Engineering Kit.",
+      "My resume is being updated and isn't available to download right now. You can still explore my Computer Science education at Batangas State University, and my projects, JayFolio, the AI Engineering Kit, and TindaScan.",
   },
   contact: {
     title: "Contact",
