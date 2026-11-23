@@ -1,47 +1,38 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useTheme } from '@/components/theme-provider';
+import { motion } from "framer-motion";
 
 interface SectionTitleProps {
   title: string;
   subtitle?: string;
+  /** Use "h1" when the title is the page's main heading (inner pages). */
+  as?: "h1" | "h2";
 }
 
-export function SectionTitle({ title, subtitle }: SectionTitleProps) {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
-
+export function SectionTitle({
+  title,
+  subtitle,
+  as: Heading = "h2",
+}: SectionTitleProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="mb-12 md:mb-16"
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mb-10 md:mb-14"
     >
-      <h2
-        className="text-3xl md:text-4xl font-semibold tracking-tight"
-        style={{ color: isDark ? '#fafafa' : '#181818' }}
+      <Heading
+        className={`${Heading === "h1" ? "text-page-title" : "text-section"} text-(--theme-text)`}
       >
         {title}
-      </h2>
+      </Heading>
       {subtitle && (
-        <p
-          className="text-lg md:text-xl mt-3 max-w-2xl"
-          style={{ color: isDark ? '#a0a0a0' : '#525252' }}
-        >
+        <p className="text-lead mt-3 max-w-2xl text-(--theme-text-secondary)">
           {subtitle}
         </p>
       )}
-      <motion.div
-        className="border-t mt-6 md:mt-8"
-        style={{ borderColor: isDark ? 'rgba(34, 34, 34, 0.5)' : 'rgba(224, 224, 220, 0.5)' }}
-        initial={{ scaleX: 0, transformOrigin: 'left' }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-      />
+      <div className="mt-6 md:mt-8 border-t border-(--theme-border)" />
     </motion.div>
   );
 }

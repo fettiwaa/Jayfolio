@@ -5,6 +5,7 @@ import ChatButton from "@/components/chat/chat-button";
 import Nav from "@/components/layout/nav";
 import Footer from "@/components/layout/footer";
 import { Inter } from "next/font/google";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,10 +30,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
+  // Icons come from app/icon.svg and app/apple-icon.tsx (Next.js file conventions).
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -69,11 +67,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable} data-theme="dark">
+    // suppressHydrationWarning: THEME_INIT_SCRIPT may change data-theme before React loads.
+    <html
+      lang="en"
+      className={inter.variable}
+      data-theme="dark"
+      suppressHydrationWarning
+    >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
       </head>
-      <body className="min-h-screen bg-[var(--theme-bg)] text-[var(--theme-text)] antialiased">
+      <body className="min-h-screen bg-(--theme-bg) text-(--theme-text) antialiased">
         <a href="#main" className="skip-to-content">
           Skip to content
         </a>
