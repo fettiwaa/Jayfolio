@@ -41,14 +41,14 @@ export const metadata: Metadata = {
     title: "Jaycee Andal — Full Stack Developer",
     description:
       "Portfolio of Jaycee Andal — Computer Science Student and Full Stack Developer",
-    images: ["/og-image.png"],
+    images: ["/og"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Jaycee Andal — Full Stack Developer",
     description:
       "Portfolio of Jaycee Andal — Computer Science Student and Full Stack Developer",
-    images: ["/og-image.png"],
+    images: ["/og"],
   },
   robots: {
     index: true,

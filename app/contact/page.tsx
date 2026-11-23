@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, FileText } from "lucide-react";
+import { Mail } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useTheme } from "@/components/theme-provider";
@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { SectionTitle } from "@/components/ui/section-title";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
-import { submitContactForm } from "@/app/actions";
 import { site } from "@/lib/constants";
 
 const contactInfo = [
@@ -30,7 +29,6 @@ const contactInfo = [
     icon: LinkedInIcon,
     href: site.linkedin,
   },
-  { label: "Resume", value: "Download PDF", icon: FileText, href: site.resume },
 ];
 
 const item = fadeInUp;
@@ -117,88 +115,34 @@ export default function ContactPage() {
           </motion.div>
 
           <motion.div variants={item}>
-            <form action={submitContactForm} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: "var(--theme-text)" }}
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="w-full px-4 py-3 rounded-[var(--btn-radius)] text-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--theme-bg)]"
-                  style={{
-                    backgroundColor: "var(--theme-input-bg)",
-                    borderColor: "var(--theme-input-border)",
-                    color: "var(--theme-input-text)",
-                  }}
-                  placeholder="Your name"
-                  aria-required="true"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: "var(--theme-text)" }}
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  required
-                  className="w-full px-4 py-3 rounded-[var(--btn-radius)] text-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--theme-bg)]"
-                  style={{
-                    backgroundColor: "var(--theme-input-bg)",
-                    borderColor: "var(--theme-input-border)",
-                    color: "var(--theme-input-text)",
-                  }}
-                  placeholder="your.email@example.com"
-                  aria-required="true"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: "var(--theme-text)" }}
-                >
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-[var(--btn-radius)] text-sm transition-all resize-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--theme-bg)]"
-                  style={{
-                    backgroundColor: "var(--theme-input-bg)",
-                    borderColor: "var(--theme-input-border)",
-                    color: "var(--theme-input-text)",
-                  }}
-                  placeholder="Your message here..."
-                  aria-required="true"
-                />
-              </div>
-
+            <div
+              className="p-8 rounded-[var(--btn-radius)] border space-y-4"
+              style={{ borderColor: "var(--theme-border)" }}
+            >
+              <h3
+                className="text-xl font-semibold"
+                style={{ color: "var(--theme-text)" }}
+              >
+                Send me an email
+              </h3>
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "var(--theme-text-secondary)" }}
+              >
+                The quickest way to reach me is by email. I usually reply within
+                a couple of days.
+              </p>
               <Button
+                href={`mailto:${site.email}`}
                 variant="primary"
                 size="md"
                 radius="default"
                 className="w-full"
+                icon={<Mail size={16} />}
               >
-                Send Message
+                Email {site.email}
               </Button>
-            </form>
+            </div>
           </motion.div>
         </motion.div>
       </div>

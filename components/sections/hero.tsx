@@ -98,16 +98,6 @@ export default function HeroSection() {
                   View Projects
                 </motion.button>
               </Link>
-              <motion.a
-                href={site.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.02, y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-6 py-3 text-sm font-medium border border-[var(--theme-border)] text-[var(--theme-text)] rounded-[var(--btn-radius)] transition-all"
-              >
-                Download Resume
-              </motion.a>
             </motion.div>
 
             <motion.div

@@ -32,6 +32,14 @@ export function Timeline({ items }: TimelineProps) {
     ? "rgba(42, 47, 54, 0.5)"
     : "rgba(224, 224, 220, 0.5)";
 
+  if (items.length === 0) {
+    return (
+      <p className="text-center text-sm" style={{ color: secondaryColor }}>
+        Nothing to show here yet. Check back soon.
+      </p>
+    );
+  }
+
   return (
     <div className="relative">
       <motion.div

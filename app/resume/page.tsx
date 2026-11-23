@@ -1,10 +1,9 @@
 "use client";
 
-import { FileText, Briefcase, GraduationCap } from "lucide-react";
+import { Briefcase, GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTheme } from "@/components/theme-provider";
 import { SectionTitle } from "@/components/ui/section-title";
-import { site } from "@/lib/constants";
 import { experiences } from "@/lib/data";
 import { educationData } from "@/lib/data";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
@@ -18,7 +17,7 @@ export default function ResumePage() {
       <div className="max-width-content mx-auto section-padding-x">
         <SectionTitle
           title="Resume"
-          subtitle="Download my resume or explore my experience and education below."
+          subtitle="Explore my experience and education below."
         />
 
         <motion.div
@@ -28,17 +27,6 @@ export default function ResumePage() {
           viewport={{ once: true, amount: 0.1 }}
           className="flex flex-wrap gap-4 mb-16"
         >
-          <motion.div variants={item}>
-            <a
-              href={site.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium bg-[var(--theme-accent)] text-[var(--theme-bg)] rounded-[var(--btn-radius)] transition-all hover:scale-105 hover:shadow-lg"
-            >
-              <FileText size={16} />
-              Download Resume
-            </a>
-          </motion.div>
           <motion.div variants={item}>
             <a
               href="/experience"
@@ -74,6 +62,14 @@ export default function ResumePage() {
               <Briefcase size={18} style={{ color: "var(--theme-accent)" }} />
               Work Experience
             </h2>
+            {experiences.length === 0 && (
+              <p
+                className="text-sm"
+                style={{ color: "var(--theme-text-secondary)" }}
+              >
+                Nothing to show here yet. Check back soon.
+              </p>
+            )}
             <motion.div variants={container} className="space-y-8">
               {experiences.map((exp, i) => (
                 <motion.div

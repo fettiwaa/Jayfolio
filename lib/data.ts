@@ -63,20 +63,22 @@ export const projects: Project[] = [
   },
 ];
 
+// Experience content is hidden for now. To restore, uncomment the entry below
+// and the matching text in chatKnowledge (lib/constants.ts).
 export const experiences: Experience[] = [
-  {
-    period: "2026 – Present",
-    title: "Software Engineering Intern",
-    company: "MindTech Synergy",
-    location: "Remote",
-    responsibilities: [
-      "Develop web applications using Laravel and PHP",
-      "Maintain and optimize backend systems",
-      "Collaborate with team using Git workflows",
-      "Implement new features and bug fixes",
-      "Participate in the full software development lifecycle",
-    ],
-  },
+  // {
+  //   period: "2026 – Present",
+  //   title: "Software Engineering Intern",
+  //   company: "MindTech Synergy",
+  //   location: "Remote",
+  //   responsibilities: [
+  //     "Develop web applications using Laravel and PHP",
+  //     "Maintain and optimize backend systems",
+  //     "Collaborate with team using Git workflows",
+  //     "Implement new features and bug fixes",
+  //     "Participate in the full software development lifecycle",
+  //   ],
+  // },
 ];
 
 export const educationData: Education[] = [
