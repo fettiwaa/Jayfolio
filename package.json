@@ -39,11 +39,10 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.1.2",
     "@types/react": "^19.2.18",
-    "@vercel/og": "^0.11.1",
     "autoprefixer": "^10.5.4",
     "framer-motion": "^12.43.0",
     "lucide-react": "^1.28.0",
-    "next": "^15.5.22",
+    "next": "^15.5.29",
     "next-mdx-remote": "^6.0.0",
     "postcss": "^8.5.25",
     "react": "^19.2.8",
@@ -59,5 +58,10 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.9.6"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "$postcss"
+    }
   }
 }
