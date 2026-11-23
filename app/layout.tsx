@@ -41,18 +41,17 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://jayfolio-fty.vercel.app",
-    siteName: "Jaycee Andal",
-    title: "Jaycee Andal — Full Stack Developer",
-    description:
-      "Portfolio of Jaycee Andal — Computer Science Student and Full Stack Developer",
-    images: ["/og"],
+    // Share previews: just "Jayfolio" (owner's request, 2026-11-23).
+    siteName: "Jayfolio",
+    title: "Jayfolio",
+    description: "Portfolio of Jaycee Andal, Computer Science student.",
+    images: ["/og?v=2"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jaycee Andal — Full Stack Developer",
-    description:
-      "Portfolio of Jaycee Andal — Computer Science Student and Full Stack Developer",
-    images: ["/og"],
+    title: "Jayfolio",
+    description: "Portfolio of Jaycee Andal, Computer Science student.",
+    images: ["/og?v=2"],
   },
   robots: {
     index: true,
