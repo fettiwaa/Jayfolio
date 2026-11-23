@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Jaycee Andal" }],
   creator: "Jaycee Andal",
-  metadataBase: new URL("https://jayfolio.vercel.app"),
+  metadataBase: new URL("https://jayfolio-fty.vercel.app"),
   alternates: {
     canonical: "/",
   },
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://jayfolio.vercel.app",
+    url: "https://jayfolio-fty.vercel.app",
     siteName: "Jaycee Andal",
     title: "Jaycee Andal — Full Stack Developer",
     description:

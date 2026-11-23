@@ -1,4 +1,7 @@
-name: Deploy to Vercel
+# Lint and build check on every push and pull request to main.
+# Deployment is handled by Vercel (project fettiwaa/jayfolio, https://jayfolio-fty.vercel.app):
+# run `vercel --prod`, or connect the GitHub repo in the Vercel dashboard for automatic deploys.
+name: CI
 
 on:
   push:
@@ -20,17 +23,3 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'

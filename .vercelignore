@@ -1,0 +1,11 @@
+# Files the Vercel CLI must not upload. Vercel builds from source, so local
+# build output, tool folders and private material stay on this machine.
+node_modules
+.next
+.kilo
+archive
+.ai-kit
+docs
+tsconfig.tsbuildinfo
+.env
+.env.*

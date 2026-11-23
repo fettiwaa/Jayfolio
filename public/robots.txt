@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://jayfolio.vercel.app/sitemap.xml
+Sitemap: https://jayfolio-fty.vercel.app/sitemap.xml
 
 # Crawl-delay helps prevent overloading the server
 Crawl-delay: 1

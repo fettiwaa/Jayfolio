@@ -12,7 +12,7 @@ export const projects: Project[] = [
     role: "Designer & Developer",
     thumbnail: "/images/projects/jayfolio-v3.svg",
     github: "https://github.com/fettiwaa/Jayfolio",
-    demo: "https://jayfolio.vercel.app",
+    demo: "https://jayfolio-fty.vercel.app",
     featured: true,
     href: "/projects/jayfolio-v3",
   },
