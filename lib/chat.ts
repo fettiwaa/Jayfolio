@@ -19,52 +19,95 @@ export const chatSuggestions: ChatSuggestion[] = [
   { label: "Contact", query: "How can I contact you?" },
 ];
 
-const keywordResponses: Record<string, { title: string; content: string }> = {
-  about: { title: "About Me", content: chatKnowledge.about.content },
-  name: { title: "About Me", content: chatKnowledge.about.content },
-  who: { title: "About Me", content: chatKnowledge.about.content },
-  focus: { title: "About Me", content: chatKnowledge.about.content },
-  skills: { title: "Skills", content: chatKnowledge.skills.content },
-  tech: { title: "Skills", content: chatKnowledge.skills.content },
-  technology: { title: "Skills", content: chatKnowledge.skills.content },
-  stack: { title: "Skills", content: chatKnowledge.skills.content },
-  project: { title: "Projects", content: chatKnowledge.projects.content },
-  projects: { title: "Projects", content: chatKnowledge.projects.content },
-  kit: { title: "Projects", content: chatKnowledge.projects.content },
-  experience: {
-    title: "Experience",
+const GREETING =
+  "Hello! I'm Jaja. I can tell you about Jaycee's projects, experience, education, tech stack, resume, or how to contact them. What would you like to know?";
+
+const FALLBACK =
+  "I'm not sure about that. Try asking about Jaycee's skills, projects, experience, education, resume, or how to contact them.";
+
+interface ChatRule {
+  keywords: readonly string[];
+  content: string;
+}
+
+/**
+ * Checked in order; the first rule with a matching whole word wins. Specific
+ * topics come before the general "about" rule, so "about your projects"
+ * answers with projects. Answers are predefined; nothing is generated.
+ */
+const CHAT_RULES: readonly ChatRule[] = [
+  {
+    keywords: ["project", "projects", "portfolio", "jayfolio", "kit"],
+    content: chatKnowledge.projects.content,
+  },
+  {
+    keywords: [
+      "skill",
+      "skills",
+      "tech",
+      "technology",
+      "technologies",
+      "stack",
+      "framework",
+      "frameworks",
+      "language",
+      "languages",
+      "tools",
+    ],
+    content: chatKnowledge.skills.content,
+  },
+  {
+    keywords: [
+      "experience",
+      "work",
+      "job",
+      "jobs",
+      "intern",
+      "internship",
+      "career",
+    ],
     content: chatKnowledge.experience.content,
   },
-  work: { title: "Experience", content: chatKnowledge.experience.content },
-  intern: { title: "Experience", content: chatKnowledge.experience.content },
-  education: { title: "Education", content: chatKnowledge.education.content },
-  university: { title: "Education", content: chatKnowledge.education.content },
-  study: { title: "Education", content: chatKnowledge.education.content },
-  resume: { title: "Resume", content: chatKnowledge.resume.content },
-  download: { title: "Resume", content: chatKnowledge.resume.content },
-  contact: { title: "Contact", content: chatKnowledge.contact.content },
-  email: { title: "Contact", content: chatKnowledge.contact.content },
-  reach: { title: "Contact", content: chatKnowledge.contact.content },
-  hello: {
-    title: "Hi there!",
-    content:
-      "Hello! I'm Jaja. I can tell you about Jaycee's projects, experience, education, tech stack, resume, or how to contact them. What would you like to know?",
+  {
+    keywords: [
+      "education",
+      "university",
+      "school",
+      "study",
+      "studies",
+      "college",
+      "degree",
+      "course",
+      "coursework",
+    ],
+    content: chatKnowledge.education.content,
   },
-  hi: {
-    title: "Hi there!",
-    content:
-      "Hello! I'm Jaja. I can tell you about Jaycee's projects, experience, education, tech stack, resume, or how to contact them. What would you like to know?",
+  {
+    keywords: ["resume", "cv", "download"],
+    content: chatKnowledge.resume.content,
   },
-};
+  {
+    keywords: ["contact", "email", "reach", "hire", "linkedin", "github"],
+    content: chatKnowledge.contact.content,
+  },
+  {
+    keywords: ["about", "who", "yourself", "name", "focus", "background"],
+    content: chatKnowledge.about.content,
+  },
+  {
+    keywords: ["hi", "hello", "hey"],
+    content: GREETING,
+  },
+];
 
 export function getResponse(input: string): string {
-  const lower = input.toLowerCase();
+  const words = new Set(input.toLowerCase().match(/[a-z0-9]+/g) ?? []);
 
-  for (const [keyword, response] of Object.entries(keywordResponses)) {
-    if (lower.includes(keyword)) {
-      return response.content;
+  for (const rule of CHAT_RULES) {
+    if (rule.keywords.some((keyword) => words.has(keyword))) {
+      return rule.content;
     }
   }
 
-  return "I'm not sure about that. Try asking about Jaycee's skills, projects, experience, education, resume, or how to contact them.";
+  return FALLBACK;
 }

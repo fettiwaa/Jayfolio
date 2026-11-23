@@ -1,88 +1,84 @@
 "use client";
 
-import { useState, useRef, useEffect, type KeyboardEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { chatKnowledge, site } from "@/lib/constants";
 import { chatSuggestions, getResponse } from "@/lib/chat";
 import type { ChatMessage } from "@/lib/chat";
-import { useTheme } from "@/components/theme-provider";
+import { useDialog } from "@/lib/use-dialog";
+
+const PANEL_ID = "jaja-chat";
+const REPLY_DELAY_MS = 600;
 
 export default function ChatButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const panelRef = useRef<HTMLDivElement>(null);
+  const replyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const bgColor = isDark ? "#111111" : "#ffffff";
-  const borderColor = isDark ? "#222222" : "#e0e0dc";
-  const textColor = isDark ? "#fafafa" : "#181818";
-  const secondaryColor = isDark ? "#a0a0a0" : "#525252";
-  const inputBg = isDark ? "#171111" : "#fafafa";
-  const accentColor = isDark ? "#d1d5db" : "#6b7280";
+  // Non-modal: the page stays usable; Escape closes and focus returns to the button.
+  useDialog({
+    open: isOpen,
+    onClose: () => setIsOpen(false),
+    containerRef: panelRef,
+    modal: false,
+    initialFocusRef: inputRef,
+  });
 
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   }, [messages, isTyping]);
 
-  const handleSend = () => {
-    const trimmed = input.trim();
-    if (!trimmed) return;
+  useEffect(() => {
+    return () => {
+      if (replyTimer.current) clearTimeout(replyTimer.current);
+    };
+  }, []);
 
-    setShowSuggestions(false);
-    const userMessage: ChatMessage = { role: "user", content: trimmed };
-    setMessages((prev) => [...prev, userMessage]);
+  const ask = (question: string) => {
+    const trimmed = question.trim();
+    if (!trimmed || isTyping) return;
+
+    setMessages((prev) => [...prev, { role: "user", content: trimmed }]);
+    setIsTyping(true);
+    replyTimer.current = setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: getResponse(trimmed) },
+      ]);
+      setIsTyping(false);
+    }, REPLY_DELAY_MS);
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    ask(input);
     setInput("");
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const response = getResponse(trimmed);
-      const botMessage: ChatMessage = { role: "bot", content: response };
-      setMessages((prev) => [...prev, botMessage]);
-      setIsTyping(false);
-    }, 600);
-  };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
-  const handleSuggestionClick = (query: string) => {
-    setShowSuggestions(false);
-    const userMessage: ChatMessage = { role: "user", content: query };
-    setMessages((prev) => [...prev, userMessage]);
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const response = getResponse(query);
-      const botMessage: ChatMessage = { role: "bot", content: response };
-      setMessages((prev) => [...prev, botMessage]);
-      setIsTyping(false);
-    }, 600);
   };
 
   return (
     <>
       <motion.button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-[var(--card-radius)] shadow-lg transition-all duration-300 hover:scale-105 border border-[var(--theme-border)]"
-        style={{
-          backgroundColor: "var(--theme-surface-elevated)",
-          color: "var(--theme-text)",
-        }}
-        aria-label="Chat with Jaja"
+        type="button"
+        onClick={() => setIsOpen((open) => !open)}
+        whileTap={{ scale: 0.97 }}
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-(--card-radius) shadow-lg border border-(--theme-border) bg-(--theme-surface-elevated) text-(--theme-text) transition-colors hover:border-(--theme-text-muted)"
+        aria-label={isOpen ? "Close chat with Jaja" : "Chat with Jaja"}
+        aria-expanded={isOpen}
+        aria-controls={PANEL_ID}
       >
-        <MessageCircle size={18} />
+        {isOpen ? (
+          <X size={18} aria-hidden="true" />
+        ) : (
+          <MessageCircle size={18} aria-hidden="true" />
+        )}
         <span className="text-sm font-medium hidden sm:inline">
           Chat with Jaja
         </span>
@@ -91,173 +87,105 @@ export default function ChatButton() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            ref={panelRef}
+            id={PANEL_ID}
+            role="dialog"
+            aria-label="Chat with Jaja"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 16 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed bottom-24 right-6 z-50 w-80 sm:w-96 rounded-[var(--card-radius)] shadow-2xl overflow-hidden flex flex-col"
-            style={{
-              backgroundColor: bgColor,
-              border: `1px solid ${borderColor}`,
-            }}
+            className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-(--card-radius) shadow-2xl overflow-hidden flex flex-col border border-(--theme-border) bg-(--theme-surface)"
           >
-            <div
-              className="px-4 py-3 flex items-center justify-between"
-              style={{ borderBottom: `1px solid ${borderColor}` }}
-            >
+            <div className="px-4 py-3 flex items-center justify-between border-b border-(--theme-border)">
               <div className="flex items-center gap-2">
-                <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold"
-                  style={{
-                    backgroundColor: "var(--theme-accent)",
-                    color: "var(--theme-bg)",
-                  }}
+                <span
+                  aria-hidden="true"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold bg-(--theme-accent) text-(--theme-bg)"
                 >
                   J
-                </div>
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: textColor }}
-                >
-                  Chat with Jaja
+                </span>
+                <span className="text-sm font-medium text-(--theme-text)">
+                  Jaja
+                </span>
+                <span className="text-xs text-(--theme-text-muted)">
+                  · quick answers about Jaycee
                 </span>
               </div>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
-                className="p-1 transition-colors"
-                style={{ color: secondaryColor }}
+                className="p-1.5 rounded-(--btn-radius) text-(--theme-text-secondary) transition-colors hover:text-(--theme-text) hover:bg-(--theme-fill)"
                 aria-label="Close chat"
               >
-                <X size={16} />
+                <X size={16} aria-hidden="true" />
               </button>
             </div>
 
             <div
-              className="flex-1 overflow-y-auto p-4 space-y-4"
-              style={{ maxHeight: "calc(100vh - 220px)" }}
+              className="flex-1 overflow-y-auto p-4 space-y-3"
+              style={{ maxHeight: "min(28rem, calc(100dvh - 14rem))" }}
             >
               {messages.length === 0 && (
-                <div className="space-y-4">
-                  <div
-                    className="p-3 rounded-[var(--btn-radius)] text-sm"
-                    style={{
-                      backgroundColor: isDark ? "#1a1a1a" : "#f5f5f5",
-                      color: textColor,
-                    }}
-                  >
-                    <p
-                      className="mb-1 font-medium"
-                      style={{ color: textColor }}
-                    >
-                      Hi! I&apos;m Jaja.
+                <div className="space-y-3">
+                  <div className="p-3 rounded-(--btn-radius) text-sm bg-(--theme-fill) text-(--theme-text)">
+                    <p className="font-medium">Hi! I&apos;m Jaja.</p>
+                    <p className="mt-1 text-(--theme-text-secondary)">
+                      Pick a topic or type a question.
                     </p>
-                    <p className="text-sm" style={{ color: secondaryColor }}>
-                      Ask me about:
-                    </p>
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      {[
-                        "Projects",
-                        "Experience",
-                        "Education",
-                        "Tech Stack",
-                        "Resume",
-                        "Contact",
-                      ].map((topic) => (
-                        <span
-                          key={topic}
-                          className="text-xs px-2 py-1 rounded-full"
-                          style={{
-                            backgroundColor: isDark ? "#0a0a0a" : "#e5e5e5",
-                            color: secondaryColor,
-                          }}
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
                   </div>
-
-                  {showSuggestions && (
-                    <div className="space-y-2 pt-2">
-                      <p className="text-xs" style={{ color: secondaryColor }}>
-                        Suggested questions:
-                      </p>
-                      {chatSuggestions.map((suggestion) => (
+                  <ul className="space-y-2" aria-label="Suggested questions">
+                    {chatSuggestions.map((suggestion) => (
+                      <li key={suggestion.label}>
                         <button
-                          key={suggestion.label}
-                          onClick={() =>
-                            handleSuggestionClick(suggestion.query)
-                          }
-                          className="w-full text-left px-3 py-2 rounded-[var(--btn-radius)] text-sm transition-all text-left"
-                          style={{
-                            backgroundColor: isDark ? "#0a0a0a" : "#f5f5f5",
-                            color: textColor,
-                            border: `1px solid ${borderColor}`,
-                          }}
+                          type="button"
+                          onClick={() => ask(suggestion.query)}
+                          className="w-full text-left px-3 py-2 rounded-(--btn-radius) text-sm border border-(--theme-border) text-(--theme-text) transition-colors hover:bg-(--theme-fill)"
                         >
                           {suggestion.label}
                         </button>
-                      ))}
-                    </div>
-                  )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
 
-              {messages.map((msg, i) => (
-                <motion.div
-                  key={i}
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div
-                    className={`max-w-[85%] px-4 py-3 rounded-[var(--btn-radius)] text-sm leading-relaxed`}
-                    style={{
-                      backgroundColor:
-                        msg.role === "user"
-                          ? "var(--theme-accent)"
-                          : isDark
-                            ? "#1a1a1a"
-                            : "#f5f5f5",
-                      color:
-                        msg.role === "user" ? "var(--theme-bg)" : textColor,
-                    }}
+              {/* Announces new replies to screen readers. */}
+              <div role="log" aria-live="polite" className="space-y-3">
+                {messages.map((msg, i) => (
+                  <motion.div
+                    key={i}
+                    className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
                   >
-                    {msg.content}
-                  </div>
-                </motion.div>
-              ))}
+                    <p
+                      className={`max-w-[85%] px-4 py-3 rounded-(--btn-radius) text-sm leading-relaxed ${
+                        msg.role === "user"
+                          ? "bg-(--theme-accent) text-(--theme-bg)"
+                          : "bg-(--theme-fill) text-(--theme-text)"
+                      }`}
+                    >
+                      <span className="sr-only">
+                        {msg.role === "user" ? "You: " : "Jaja: "}
+                      </span>
+                      {msg.content}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
 
               {isTyping && (
-                <div className="flex justify-start">
-                  <div
-                    className="px-4 py-3 rounded-[var(--btn-radius)] text-sm"
-                    style={{ backgroundColor: isDark ? "#1a1a1a" : "#f5f5f5" }}
-                  >
-                    <div
-                      className="flex items-center gap-1"
-                      style={{ color: secondaryColor }}
-                    >
+                <div className="flex justify-start" aria-hidden="true">
+                  <div className="px-4 py-3 rounded-(--btn-radius) bg-(--theme-fill) flex items-center gap-1">
+                    {[0, 200, 400].map((delay) => (
                       <span
-                        className="w-1.5 h-1.5 rounded-full animate-pulse"
-                        style={{ backgroundColor: secondaryColor }}
+                        key={delay}
+                        className="w-1.5 h-1.5 rounded-full animate-pulse bg-(--theme-text-muted)"
+                        style={{ animationDelay: `${delay}ms` }}
                       />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full animate-pulse animation-delay-200"
-                        style={{
-                          backgroundColor: secondaryColor,
-                          animationDelay: "200ms",
-                        }}
-                      />
-                      <span
-                        className="w-1.5 h-1.5 rounded-full animate-pulse animation-delay-400"
-                        style={{
-                          backgroundColor: secondaryColor,
-                          animationDelay: "400ms",
-                        }}
-                      />
-                    </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -265,41 +193,32 @@ export default function ChatButton() {
               <div ref={messagesEndRef} />
             </div>
 
-            <div
-              className="px-4 py-3 flex gap-2"
-              style={{
-                borderTop: `1px solid ${borderColor}`,
-                backgroundColor: bgColor,
-              }}
+            <form
+              onSubmit={handleSubmit}
+              className="px-4 py-3 flex gap-2 border-t border-(--theme-border)"
             >
+              <label htmlFor="jaja-input" className="sr-only">
+                Ask Jaja a question
+              </label>
               <input
+                id="jaja-input"
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
                 placeholder="Ask me about..."
-                className="flex-1 px-4 py-2.5 rounded-[var(--btn-radius)] text-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[var(--theme-bg)]"
-                style={{
-                  backgroundColor: inputBg,
-                  borderColor: borderColor,
-                  color: textColor,
-                  border: `1px solid ${borderColor}`,
-                }}
+                autoComplete="off"
+                className="flex-1 min-w-0 px-3 py-2.5 rounded-(--btn-radius) text-sm border border-(--theme-input-border) bg-(--theme-input-bg) text-(--theme-input-text) placeholder:text-(--theme-input-placeholder)"
               />
               <button
-                onClick={handleSend}
-                className="px-3 py-2 rounded-[var(--btn-radius)] text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{
-                  backgroundColor: "var(--theme-accent)",
-                  color: "var(--theme-bg)",
-                }}
-                disabled={!input.trim()}
+                type="submit"
+                className="px-3 rounded-(--btn-radius) bg-(--theme-accent) text-(--theme-bg) transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={!input.trim() || isTyping}
                 aria-label="Send message"
               >
-                <Send size={14} />
+                <Send size={14} aria-hidden="true" />
               </button>
-            </div>
+            </form>
           </motion.div>
         )}
       </AnimatePresence>

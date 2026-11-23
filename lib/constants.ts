@@ -37,7 +37,7 @@ export const chatKnowledge = {
   experience: {
     title: "Experience",
     content:
-      "I don't have work experience listed right now. Check back soon, or ask me about my projects, education, or tech stack.",
+      "Nothing listed yet. I'm focused on my studies and my own projects for now. Ask me about my projects, education, or tech stack!",
   },
   education: {
     title: "Education",
