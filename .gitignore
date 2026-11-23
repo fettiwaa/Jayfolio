@@ -4,3 +4,11 @@ node_modules
 archive
 docs/activity-log.md
 public/resume.pdf
+
+# Environment files (secrets) - never commit
+.env
+.env.*
+!.env.example
+
+# TypeScript incremental build cache
+*.tsbuildinfo
